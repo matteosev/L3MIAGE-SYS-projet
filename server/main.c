@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include "../commons.h"
 
 int main(int argc, char **argv) {
     int sock_listen;
@@ -20,12 +23,13 @@ int main(int argc, char **argv) {
     sock_listen = socket(AF_INET, SOCK_STREAM, 0);
     bind(sock_listen, (const struct sockaddr *)&sockaddr, size_addr);
     listen(sock_listen, 0);
-    
-    int boucle = 0;
 
-    while(1 && boucle < 10) {
+    while(1) {
         int sock_service = accept(sock_listen, (struct sockaddr *)&sockaddr, &size_addr);
-        boucle++;
+        
+        // Taille max trame ethernet = 1500o
+        char msg_received[1000] = "";
+
         int pid = fork();
         switch(pid) {
             case -1:
@@ -34,10 +38,28 @@ int main(int argc, char **argv) {
             case 0:
                 //fils
                 close(sock_listen);
-                char msg[100];
-                char bj[] = "Bonjour\n";
-                read(sock_service, msg, sizeof(bj));
-                printf("Message recu : %s", msg);
+
+                while(strcmp(msg_received, "finito") != 0) {
+
+                    char msg_sent[1000];
+                    memset(msg_received, 0, sizeof(msg_received));
+
+                    read_size_then_msg(sock_service, msg_received);
+
+                    printf("Msg recu : %s\n", msg_received);
+
+                    if (strcmp(msg_received, "finito") == 0)
+                        strcpy(msg_sent, "finito");
+                    else
+                        strcpy(msg_sent, "no finito");
+
+                    write_size_then_msg(sock_service, msg_sent);
+
+                    printf("Msg envoyé : %s\n", msg_sent);
+                }
+                
+                printf("Connexion terminée FINITO");
+
                 close(sock_service);
                 exit(0);
             default:
@@ -45,8 +67,9 @@ int main(int argc, char **argv) {
                 close(sock_service);
                 break;
         }
-
     }
+
+    close(sock_listen);
 
     return 0;
 }
