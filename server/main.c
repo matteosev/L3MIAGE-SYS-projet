@@ -7,38 +7,42 @@
 #include <arpa/inet.h>
 
 int main(int argc, char **argv) {
-    int sock_fd;
-    char sin_zero[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    int sock_listen;
+    struct sockaddr_in sockaddr;
+    struct in_addr ip = {INADDR_ANY};
     
-    const struct sockaddr_in sockaddr = {
-        AF_INET,
-        5000,
-        INADDR_ANY,
-        sin_zero
-    };
+    sockaddr.sin_family = AF_INET;
+    sockaddr.sin_port = 5000;
+    sockaddr.sin_addr = ip;
 
-    int size_addr = sizeof(sockaddr);
+    socklen_t size_addr = sizeof(sockaddr);
     
-    sock_fd = socket(AF_INET, SOCK_STREAM, 0);
-    bind(sock_fd, &sockaddr, size_addr);
-    listen(sock_fd, NULL);
-    int service = accept(sock_fd, (struct sockaddr *)&sockaddr, &size_addr);
+    sock_listen = socket(AF_INET, SOCK_STREAM, 0);
+    bind(sock_listen, (const struct sockaddr *)&sockaddr, size_addr);
+    listen(sock_listen, 0);
+    
+    int boucle = 0;
 
-    while(1) {
+    while(1 && boucle < 10) {
+        int sock_service = accept(sock_listen, (struct sockaddr *)&sockaddr, &size_addr);
+        boucle++;
         int pid = fork();
         switch(pid) {
             case -1:
-            //
+                perror("Erreur");
                 break;
             case 0:
                 //fils
+                close(sock_listen);
                 char msg[100];
-                read(service, msg, 8);
+                char bj[] = "Bonjour\n";
+                read(sock_service, msg, sizeof(bj));
                 printf("Message recu : %s", msg);
-                break;
+                close(sock_service);
+                exit(0);
             default:
                 // père
-                close(service);
+                close(sock_service);
                 break;
         }
 
