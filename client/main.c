@@ -9,6 +9,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#include "../commons.h"
+
 int main(int argc, char **argv) {
 
     struct hostent *h = gethostbyname("localhost");
@@ -29,25 +31,17 @@ int main(int argc, char **argv) {
     connect(sock_server_fd, (struct sockaddr *)&addr_server, sizeof(addr_server));
     
     while(strcmp(msg_sent, "finito") != 0) {
+        
+        memset(msg_sent, 0, sizeof(msg_sent));
+        memset(msg_received, 0, sizeof(msg_received));
+
         scanf("%s", msg_sent);
-        int size_msg_sent = strlen(msg_sent);
-        int size_msg_received = 0;
 
         printf("envoyé : %s\n", msg_sent);
 
-        write(sock_server_fd, &size_msg_sent, sizeof(size_msg_sent));
+        write_size_then_msg(sock_server_fd, msg_sent);
 
-        printf("1\n");
-
-        write(sock_server_fd, msg_sent, size_msg_sent);
-        
-        printf("2\n");
-
-        read(sock_server_fd, &size_msg_received, sizeof(size_msg_received));
-
-        printf("3\n");
-
-        read(sock_server_fd, msg_received, size_msg_received);
+        read_size_then_msg(sock_server_fd, &msg_received);
 
         printf("recu : %s\n", msg_received);
     }
