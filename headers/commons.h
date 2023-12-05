@@ -1,11 +1,9 @@
-typedef struct 
-{
+typedef struct  {
     int hour;
     int minute;
 } Time;
 
-typedef struct 
-{
+typedef struct {
     int id;
     char city_from[100];
     char city_to[100];
@@ -16,15 +14,13 @@ typedef struct
     int suppl;
 } Train;
 
-typedef struct 
-{
+typedef struct {
     char city_from[100];
     char city_to[100];
     Time time_from_1;
     Time time_from_2;
     int last; 
-
 } Request;
 
-void print_train(Train train);
-void print_request(Request req);
+void print_train(Train t);
+void print_request(Request r);
