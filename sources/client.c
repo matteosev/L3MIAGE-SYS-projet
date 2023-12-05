@@ -21,7 +21,8 @@ int main(int argc, char **argv) {
 
     // Taille max trame ethernet = 1500o
     char msg_sent[1000] = "";
-    char msg_received[1000] = "";
+    Train msg_received;
+    int nb_train; 
 
     addr_server.sin_family = AF_INET;
     addr_server.sin_port = 5000;
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
     while(strcmp(msg_sent, "finito") != 0) {
         
         memset(msg_sent, 0, sizeof(msg_sent));
-        memset(msg_received, 0, sizeof(msg_received));
+        memset(&msg_received, 0, sizeof(msg_received));
 
         scanf("%s", msg_sent);
 
@@ -41,9 +42,16 @@ int main(int argc, char **argv) {
 
         write_size_then_msg(sock_server_fd, msg_sent);
 
-        read_size_then_msg(sock_server_fd, &msg_received);
+        read_size_then_msg(sock_server_fd, &nb_train);
 
-        printf("recu : %s\n", msg_received);
+        for(int i = 0; i < nb_train; i++){
+
+            read_size_then_msg(sock_server_fd, &msg_received);
+            printf("recu : %d\n", msg_received.city_from);
+        }
+        
+
+        
     }
 
     return 0;
