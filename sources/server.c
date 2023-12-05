@@ -25,10 +25,10 @@ int main(int argc, char **argv) {
     listen(sock_listen, 0);
 
     while(1) {
+
         int sock_service = accept(sock_listen, (struct sockaddr *)&sockaddr, &size_addr);
         
-        // Taille max trame ethernet = 1500o
-        char msg_received[1000] = "";
+        
 
         int pid = fork();
         switch(pid) {
@@ -36,13 +36,17 @@ int main(int argc, char **argv) {
                 perror("Erreur");
                 break;
             case 0:
+
                 //fils
                 close(sock_listen);
+                
+                Request req;
 
-                while(strcmp(msg_received, "finito") != 0) {
-
-                    char msg_sent[1000];
-                    int nb_train = 3;
+                do{
+                    
+                    read(sock_service, &req, sizeof(req));
+            
+                    int nb_train = 2;
 
                     Train monTrain;
                     Time horaire1;
@@ -54,7 +58,7 @@ int main(int argc, char **argv) {
                     horaire2.hour = 11;
                     horaire2.minute = 30;
 
-                    monTrain.id = 0;
+                    monTrain.id = 10;
                     monTrain.city_from = MONTELIMAR;
                     monTrain.city_to = PARIS;
                     monTrain.time_from = horaire1;
@@ -62,36 +66,22 @@ int main(int argc, char **argv) {
                     monTrain.price = 9.80;
                     monTrain.reduc = 0;
                     monTrain.suppl = 0;
-                    
 
-                    memset(msg_received, 0, sizeof(msg_received));
-
-                    read_size_then_msg(sock_service, msg_received);
-
-                    write_size_then_msg(sock_service, &nb_train);
+                    write(sock_service, &nb_train, sizeof(nb_train));
                     
                     for(int i = 0; i < nb_train; i++){
 
-                        write_size_then_msg(sock_service, &monTrain);
-                        
+                        write(sock_service, &monTrain, sizeof(monTrain));
+                            
                     }
 
-                    
-
-                    if (strcmp(msg_received, "finito") == 0)
-                        strcpy(msg_sent, "finito");
-                    else
-                        strcpy(msg_sent, "no finito");
-
-                    write_size_then_msg(sock_service, &monTrain);
-
-                    printf("Msg envoyé : %s\n", msg_sent);
-                }
+                }while(req.last == 0);
                 
                 printf("Connexion fermée FINITO\n");
 
                 close(sock_service);
                 exit(0);
+
             default:
                 // père
                 close(sock_service);

@@ -11,6 +11,15 @@
 
 #include "../headers/commons.h"
 
+typedef enum 
+{
+    CHOIX_1 = 1,
+    CHOIX_2 = 2,
+    CHOIX_3 = 3,
+    QUITTER = 4
+
+} Menu;
+
 int main(int argc, char **argv) {
 
     struct hostent *h = gethostbyname("localhost");
@@ -18,11 +27,9 @@ int main(int argc, char **argv) {
     struct in_addr ip_server = { *h->h_addr_list[0] };
     
     struct sockaddr_in addr_server;
+    int flag = 0;
 
-    // Taille max trame ethernet = 1500o
-    char msg_sent[1000] = "";
-    Train msg_received;
-    int nb_train; 
+    
 
     addr_server.sin_family = AF_INET;
     addr_server.sin_port = 5000;
@@ -31,28 +38,100 @@ int main(int argc, char **argv) {
     int sock_server_fd = socket(AF_INET, SOCK_STREAM, 0);
     connect(sock_server_fd, (struct sockaddr *)&addr_server, sizeof(addr_server));
     
-    while(strcmp(msg_sent, "finito") != 0) {
+    Request req;
+
+    do{
+        req.last = 0;
+        Train train;
+        int rep; 
         
-        memset(msg_sent, 0, sizeof(msg_sent));
-        memset(&msg_received, 0, sizeof(msg_received));
+        //memset(msg_sent, 0, sizeof(msg_sent));
+        //memset(&train, 0, sizeof(train));
 
-        scanf("%s", msg_sent);
+        printf("Que voulez-vous faire ?\n");
+        printf("%d. Demander le premier train disponible entre deux villes à partir d'une heure donnée\n", CHOIX_1);
+        printf("%d. Demander tous les trains disponibles entre deux villes durant une plage horaire\n", CHOIX_2);
+        printf("%d. Demander tous les trains disponibles entre deux villes\n", CHOIX_3);
+        printf("%d. Quitter\n", QUITTER);
+        scanf("%d", &rep);
 
-        printf("envoyé : %s\n", msg_sent);
+        if(rep == CHOIX_1 || rep == CHOIX_2  || rep == CHOIX_3){
+            
+            
+            char ville_from;
+            char ville_to;
 
-        write_size_then_msg(sock_server_fd, msg_sent);
+            printf("Villes disponibles : PARIS : P, MONTELIMAR : M, GRENOBLE : G, VALENCE, V \n");
+            printf("Ville numero 1 : \n");
+            scanf("%c\n", &ville_from);
+            
+            req.city_from = char_to_city(ville_from);
+            
+            printf("Ville numero 2 : \n");
+            scanf("%c\n", &ville_to);
 
-        read_size_then_msg(sock_server_fd, &nb_train);
-
-        for(int i = 0; i < nb_train; i++){
-
-            read_size_then_msg(sock_server_fd, &msg_received);
-            printf("recu : %d\n", msg_received.city_from);
+            req.city_to = char_to_city(ville_to);
         }
-        
+    
+        switch(rep){
 
-        
-    }
+            case CHOIX_1 :
+
+                req.time_from_1.hour = 10;
+                req.time_from_1.minute = 0;
+                req.time_from_2.hour = 25;
+                req.time_from_2.minute = 60;
+
+                break;
+            
+            case CHOIX_2 :
+
+                req.time_from_1.hour = 10;
+                req.time_from_1.minute = 0;
+                req.time_from_2.hour = 12;
+                req.time_from_2.minute = 0;
+
+                break;
+
+            case CHOIX_3 :
+
+                req.time_from_1.hour = 25;
+                req.time_from_1.minute = 60;
+                req.time_from_2.hour = 25;
+                req.time_from_2.minute = 60;
+
+                break;
+
+            case QUITTER :
+
+                req.last = 1;
+                printf("Merci et bonne journée !\n");
+                break;
+
+            default : 
+
+                break;
+        }
+
+        write(sock_server_fd, &req, sizeof(req));
+
+        if(rep == CHOIX_1 || rep == CHOIX_2  || rep == CHOIX_3){
+
+            int nb_train;
+
+            read(sock_server_fd, &nb_train, sizeof(nb_train));
+
+            printf("Nombre de train : %d\n", nb_train);
+            
+            for(int i = 0; i < nb_train; i++){
+
+                printf("Train numero %d\n", i);
+                read(sock_server_fd, &train, sizeof(train));
+                print_train(&train);
+            }
+        }
+
+    } while(req.last == 0);
 
     return 0;
 }
