@@ -28,8 +28,6 @@ int main(int argc, char **argv) {
 
         int sock_service = accept(sock_listen, (struct sockaddr *)&sockaddr, &size_addr);
         
-        
-
         int pid = fork();
         switch(pid) {
             case -1:
@@ -59,8 +57,8 @@ int main(int argc, char **argv) {
                     horaire2.minute = 30;
 
                     monTrain.id = 10;
-                    monTrain.city_from = MONTELIMAR;
-                    monTrain.city_to = PARIS;
+                    strcpy(monTrain.city_from, "MONTELIMAR");
+                    strcpy(monTrain.city_to, "PARIS");
                     monTrain.time_from = horaire1;
                     monTrain.time_to = horaire2;
                     monTrain.price = 9.80;
@@ -92,4 +90,39 @@ int main(int argc, char **argv) {
     close(sock_listen);
 
     return 0;
+}
+
+int filter_train_from_array(Train trains[], int nb_train, Train *trains_filtered, char* city_from, char* city_to, Time time_from, Time time_to){
+
+    trains_filtered = malloc(0);
+    int nb_train_filtered;
+
+    for(int i = 0; i < nb_train; i++){
+
+        if(check_filter(trains[i], city_from, city_to, time_from, time_to) == 1){
+            
+            trains_filtered = realloc(trains_filtered, sizeof(trains_filtered) + sizeof(Train));
+            trains_filtered[nb_train_filtered] = trains[i];
+            nb_train_filtered++;
+        }
+    }
+
+    return nb_train_filtered;
+}
+
+int check_filter(Train train, char* city_from, char* city_to, Time time_from, Time time_to){
+
+    if(strcmp(train.city_from, city_from) != 0)
+        return 0;
+
+    if(strcmp(train.city_to, city_to) != 0)
+        return 0;
+
+    if(train.time_from.hour != time_from.hour || train.time_from.minute != time_from.minute)
+        return 0;
+
+    if(train.time_to.hour != time_to.hour || train.time_to.minute != time_to.minute)
+        return 0;
+
+    return 1;
 }

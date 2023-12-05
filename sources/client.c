@@ -56,21 +56,13 @@ int main(int argc, char **argv) {
         scanf("%d", &rep);
 
         if(rep == CHOIX_1 || rep == CHOIX_2  || rep == CHOIX_3){
-            
-            
-            char ville_from;
-            char ville_to;
 
-            printf("Villes disponibles : PARIS : P, MONTELIMAR : M, GRENOBLE : G, VALENCE, V \n");
-            printf("Ville numero 1 : \n");
-            scanf("%c\n", &ville_from);
-            
-            req.city_from = char_to_city(ville_from);
-            
-            printf("Ville numero 2 : \n");
-            scanf("%c\n", &ville_to);
-
-            req.city_to = char_to_city(ville_to);
+            printf("Villes disponibles : PARIS, MONTELIMAR, GRENOBLE, VALENCE \n");
+            printf("Ville numero 1 : ");
+            scanf("%s", &req.city_from);
+     
+            printf("Ville numero 2 : ");
+            scanf("%s", &req.city_to);
         }
     
         switch(rep){
@@ -122,7 +114,7 @@ int main(int argc, char **argv) {
             read(sock_server_fd, &nb_train, sizeof(nb_train));
 
             printf("Nombre de train : %d\n", nb_train);
-            
+
             for(int i = 0; i < nb_train; i++){
 
                 printf("Train numero %d\n", i);
