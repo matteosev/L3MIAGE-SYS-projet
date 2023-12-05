@@ -69,17 +69,17 @@ int main(int argc, char **argv) {
 
                     int nb_train_filtered = filter_train_from_array(trains, nb_train, filtered_trains, req.city_from, req.city_to, req.time_from_1, req.time_from_2);
                     
-                    printf("trains filtrés : %d\n", nb_train_filtered);
                     write(sock_service, &nb_train_filtered, sizeof(nb_train_filtered));
-
                     
                     for(int i = 0; i < nb_train_filtered; i++){
-
+                        
+                        printf("%d\n", i);
+                        printf("%s\n", filtered_trains[i].city_from);
                         write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
                             
                     }
 
-                }while(req.last == 0);
+                } while(req.last == 0);
                 
                 printf("Connexion fermée FINITO\n");
 
@@ -107,7 +107,9 @@ int filter_train_from_array(Train trains[], int nb_train, Train *trains_filtered
         if(check_filter(trains[i], city_from, city_to, time_from, time_to) == 1){
             
             trains_filtered = realloc(trains_filtered, sizeof(trains_filtered) + sizeof(Train));
-            trains_filtered[nb_train_filtered] = trains[i];
+            memcpy(&trains_filtered[nb_train_filtered], &trains[i], sizeof(Train));
+            print_train(trains_filtered[nb_train_filtered]);
+            //trains_filtered[nb_train_filtered] = trains[i];
             nb_train_filtered++;
         }
     }

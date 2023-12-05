@@ -26,4 +26,5 @@ typedef struct
 
 } Request;
 
-void print_train(Train *train);
+void print_train(Train train);
+void print_request(Request req);
