@@ -42,18 +42,48 @@ int main(int argc, char **argv) {
                 while(strcmp(msg_received, "finito") != 0) {
 
                     char msg_sent[1000];
+                    int nb_train = 3;
+
+                    Train monTrain;
+                    Time horaire1;
+                    Time horaire2;
+
+                    horaire1.hour = 10;
+                    horaire1.minute = 30;
+
+                    horaire2.hour = 11;
+                    horaire2.minute = 30;
+
+                    monTrain.id = 0;
+                    monTrain.city_from = MONTELIMAR;
+                    monTrain.city_to = PARIS;
+                    monTrain.time_from = horaire1;
+                    monTrain.time_to = horaire2;
+                    monTrain.price = 9.80;
+                    monTrain.reduc = 0;
+                    monTrain.suppl = 0;
+                    
+
                     memset(msg_received, 0, sizeof(msg_received));
 
                     read_size_then_msg(sock_service, msg_received);
 
-                    printf("Msg recu : %s\n", msg_received);
+                    write_size_then_msg(sock_service, &nb_train);
+                    
+                    for(int i = 0; i < nb_train; i++){
+
+                        write_size_then_msg(sock_service, &monTrain);
+                        
+                    }
+
+                    
 
                     if (strcmp(msg_received, "finito") == 0)
                         strcpy(msg_sent, "finito");
                     else
                         strcpy(msg_sent, "no finito");
 
-                    write_size_then_msg(sock_service, msg_sent);
+                    write_size_then_msg(sock_service, &monTrain);
 
                     printf("Msg envoyé : %s\n", msg_sent);
                 }
