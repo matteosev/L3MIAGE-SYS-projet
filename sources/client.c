@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 
         if(rep == CHOIX_1 || rep == CHOIX_2  || rep == CHOIX_3){
 
-            printf("Villes disponibles : PARIS, MONTELIMAR, GRENOBLE, VALENCE \n");
+            printf("Villes disponibles : Paris, Montelimar, Grenoble, Valence \n");
             printf("Ville numero 1 : ");
             scanf("%s", &req.city_from);
      
@@ -70,9 +70,9 @@ int main(int argc, char **argv) {
             case CHOIX_1 :
 
                 req.time_from_1.hour = 10;
-                req.time_from_1.minute = 0;
-                req.time_from_2.hour = 25;
-                req.time_from_2.minute = 60;
+                req.time_from_1.minute = 07;
+                req.time_from_2.hour = 12;
+                req.time_from_2.minute = 19;
 
                 break;
             
@@ -119,6 +119,7 @@ int main(int argc, char **argv) {
 
                 printf("Train numero %d\n", i);
                 read(sock_server_fd, &train, sizeof(train));
+                printf("Avant affichage train\n");
                 print_train(&train);
             }
         }
