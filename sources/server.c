@@ -13,19 +13,19 @@
 
 int read_trains_from_file(char *filename, Train *trains, int maxTrains) ;
 int count_trains(char *filename);
-int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from_1, Time time_from_2, Request_type type);
-int check_filter(Train train, char* city_from, char* city_to, Time time_from, Time time_to, Request_type type);
+int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req);
+int check_filter(Train train, Request req);
 int timecmp(Time t1, Time t2);
 
 void end_child() {
     wait(NULL);
 }
-/*
+
 void handle_sigsegv() {
     printf("Erreur de segmentation\n");
     exit(1);
 }
-*/
+
 int main(int argc, char **argv) {
     
     int sock_listen;
@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     ac.sa_flags = SA_RESTART;
     sigaction(SIGCHLD, &ac, NULL);
 
-    //signal(SIGSEGV, handle_sigsegv);
+    signal(SIGSEGV, handle_sigsegv);
     
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = 5000;
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
                     printf("Requête reçue : ");
                     print_request(req);
 
-                    int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req.city_from, req.city_to, req.time_from_1, req.time_from_2, req.type);
+                    int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req);
 
                     printf("Nombre de trains trouvés : %d\n", nb_train_filtered);
 
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
  * @param req Request Les critères de filtrage
  * @return La taille du tableau de trains filtré
  */
-int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from, Time time_to, Request_type type){
+int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req){
 
     // Nombre de Trains qui valident les critères de recherche (aucun au début)
     int nb_train_filtered = 0;
@@ -128,7 +128,7 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
 
     for(int i = 0; i < nb_train; i++){
         // Si le Train n° i valide les critères de filtrage
-        if(check_filter(trains[i], city_from, city_to, time_from, time_to, type) == 1){
+        if(check_filter(trains[i], req) == 1){
 
             // On agrandit le tableau de Train, puis on pointe vers celui ci
             *trains_filtered = realloc(*trains_filtered, sizeof(Train) * (nb_train_filtered + 1));
@@ -145,26 +145,23 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
     return nb_train_filtered;
 }
 
-int check_filter(Train train, char* city_from, char* city_to, Time time_from_1, Time time_from_2, Request_type type){
+int check_filter(Train train, Request req){
 
-    if(strcmp(train.city_from, city_from) != 0)
+    if(strcmp(train.city_from, req.city_from) != 0)
         return 0;
 
-    if(strcmp(train.city_to, city_to) != 0)
+    if(strcmp(train.city_to, req.city_to) != 0)
         return 0;
 
-    switch (type) {
+    switch (req.type) {
 
         case HORAIRE:
 
             break;
         
         case PLAGE:
-            print_train(train);
-            int tot = timecmp(train.time_from, time_from_1);
-            int tard = timecmp(train.time_from, time_from_2);
-            printf("tot=%d tard=%d\n", tot, tard);
-            if ( tot == -1 || tard == 1)
+
+            if ( timecmp(train.time_from, req.time_from_1) == -1 || timecmp(train.time_from, req.time_from_2) == 1)
                 return 0;
             break;
 
@@ -180,63 +177,6 @@ int check_filter(Train train, char* city_from, char* city_to, Time time_from_1, 
     
     return 1;
 }
-
-/* REMPLACER LES 2 FONCTIONS AU DESSUS PAR CA MAIS CA MARCHE pas
- *
-int filter_trains(Train trains[], int nb_train, Train **trains_filtered, Request req) {
-
-    // Nombre de Trains qui valident les critères de recherche (aucun au début)
-    int nb_train_filtered = 0;
-    // Tableau de Trains qui valident les critères de recherche (vide pour l'instant)
-    Train *t = NULL;
-
-    for(int i = 0; i < nb_train; i++){
-
-        // Si le Train n° i valide les critères de filtrage
-        if(1 || check_train(trains[i], req) == 1){
-
-            // On agrandit le tableau de Train, puis on fait pointer le pointeur passé en paramètre vers celui ci
-            *trains_filtered = (Train *)realloc(t, sizeof(Train) * (nb_train_filtered + 1));
-            // On copie le train qui valide les critères de recherche à la fin du tableau de Train
-            memcpy(trains_filtered[nb_train_filtered], &trains[i], sizeof(Train));
-
-            nb_train_filtered++;
-        }
-    }
-    return nb_train_filtered;
-}
-
-int check_train(Train train, Request req) {
-
-    if(strcmp(train.city_from, req.city_from) != 0)
-        return 0;
-
-    if(strcmp(train.city_to, req.city_to) != 0)
-        return 0;
-
-
-    // Si le premier horaire de la plage horaire de la requête est valide
-    if (req.time_from_1.hour < 24 && req.time_from_1.minute < 60) {
-
-        // Si on cherche un train le + tôt possible à partir d'un horaire
-        if (timecmp(req.time_from_1, req.time_from_2) == 0) {
-            // Si le train est trop tôt, on retourne faux
-            if (timecmp(train.time_from, req.time_from_1) == -1)
-                return 0;
-        }
-        // Sinon on cherche un train dans la plage horaire
-        // Si le train est en dehors de la plage horaire, on retourne faux
-        if (timecmp(train.time_from, req.time_from_1) == -1 || timecmp(train.time_from, req.time_from_2) == 1)
-            return 0;
-    }
-
-    if(train.time_from.hour != req.time_from_1.hour && train.time_from.minute != req.time_from_2.minute)
-        return 0;
-
-
-    return 1;
-}
-*/
 
 /**
  * Compare 2 structures Time
