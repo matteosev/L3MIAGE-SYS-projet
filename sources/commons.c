@@ -13,11 +13,17 @@ void print_request(Request r) {
 
 void display_train(Train train){
 
+    printf("\n");
+    printf("**********************************");
+    printf("\n");
     printf("Train n°%d\n", train.id);
     printf("Destination : %s\n", train.city_to);
     printf("Heure de départ : %d:%d\n", train.time_from.hour, train.time_from.minute);
     printf("Heure d'arrivé : %d:%d\n", train.time_to.hour, train.time_to.minute);
     printf("Prix du billet : %.2f euros\n", train.price);
+    printf("\n");
+    printf("**********************************");
+    printf("\n");
 }
 
 Time time_difference(Time t1,Time t2){
@@ -44,4 +50,32 @@ int timecmp(Time t1, Time t2) {
         return t1.minute > t2.minute ? 1 : -1;
     }
     return t1.hour > t2.hour ? 1 : -1;
+}
+
+void send_train(int socket, Train train){
+
+    write(socket, &train.id, sizeof(train.id));
+    write(socket, &train.city_from, sizeof(train.city_from));
+    write(socket, &train.city_to, sizeof(train.city_to));
+    write(socket, &train.time_from.hour, sizeof(train.time_from.hour));
+    write(socket, &train.time_from.minute, sizeof(train.time_from.minute));
+    write(socket, &train.time_to.hour, sizeof(train.time_from.hour));
+    write(socket, &train.time_to.minute, sizeof(train.time_from.minute));
+    write(socket, &train.price, sizeof(train.price));
+    write(socket, &train.reduc, sizeof(train.reduc));
+    write(socket, &train.suppl, sizeof(train.suppl));
+}
+
+void receive_train(int socket,Train *train){
+
+    read(socket, &train->id, sizeof(train->id));
+    read(socket, &train->city_from, sizeof(train->city_from));
+    read(socket, &train->city_to, sizeof(train->city_to));
+    read(socket, &train->time_from.hour, sizeof(train->time_from.hour));
+    read(socket, &train->time_from.minute, sizeof(train->time_from.minute));
+    read(socket, &train->time_to.hour, sizeof(train->time_from.hour));
+    read(socket, &train->time_to.minute, sizeof(train->time_from.minute));
+    read(socket, &train->price, sizeof(train->price));
+    read(socket, &train->reduc, sizeof(train->reduc));
+    read(socket, &train->suppl, sizeof(train->suppl));
 }

@@ -37,4 +37,6 @@ void print_train(Train t);
 void print_request(Request r);
 void display_train(Train train);
 int timecmp(Time t1, Time t2);
+void send_train(int socket, Train train);
+void receive_train(int socket,Train *train);
 Time time_difference(Time t1,Time t2);

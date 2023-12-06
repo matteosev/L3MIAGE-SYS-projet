@@ -65,6 +65,7 @@ int main(int argc, char **argv) {
         int pid = fork();
 
         switch(pid) {
+
             case -1:
             
                 perror("fork");
@@ -89,10 +90,12 @@ int main(int argc, char **argv) {
                         perror("write du nombre de train");
                     
                     for(int i = 0; i < nb_train_filtered; i++){
-                        
+                        /*
                         printf("%d : ", i);
                         print_train(filtered_trains[i]);
-                        write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
+                        */
+                        send_train(sock_service, filtered_trains[i]);
+                        //write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
                     }
 
                 } while(req.type != FIN);
@@ -248,7 +251,7 @@ int count_trains(char *filename) {
 }
 
 int read_trains_from_file(char *filename, Train *trains, int maxTrains) {
-    
+
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {

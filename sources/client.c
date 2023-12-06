@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
     do{
 
-        Train train;
+        //Train train;
         int choix;
 
         printf("------------------------------------------------------------\n");
@@ -113,14 +113,15 @@ int main(int argc, char **argv) {
 
             Train trains[nb_train];
 
+            for(int i = 0; i < nb_train; i++){
 
-            for(int i = 0; i < nb_train && i < 10; i++){
-
+                /*
                 if (read(sock_server, &train, sizeof(train)) == -1)
                     perror("read train");
-
-                memcpy(&trains[i], &train, sizeof(Train));
-                display_train(train);
+                */
+               
+                receive_train(sock_server, &trains[i]);
+                display_train(trains[i]);
                 
             }
 
