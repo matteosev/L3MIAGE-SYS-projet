@@ -153,6 +153,16 @@ int main(int argc, char **argv) {
                             break;
 
                         case 'n' :
+                            double price_min=99999.9999;
+                            Train * cheapest;
+                            for(int i =0; i<nb_train;i++){
+                                if(trains[i].price < price_min){
+                                    price_min=trains[i].price;
+                                    cheapest=&trains[i];
+                                }
+                            }
+                            print_train(*cheapest);
+
                         
 
                             break;
@@ -167,5 +177,7 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
+
 
 
