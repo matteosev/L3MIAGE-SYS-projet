@@ -16,7 +16,7 @@ int count_trains(char *filename);
 int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req);
 int check_filter(Train train, Request req);
 int timecmp(Time t1, Time t2);
-Train* soonest_train(Train trains[], int nb_train);
+int soonest_train(Train trains[], Train **filter_result, int nb_train);
 
 void end_child() {
     wait(NULL);
@@ -146,28 +146,44 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
 
     if(req.type == HORAIRE){
 
-        *trains_filtered = soonest_train(*trains_filtered, nb_train_filtered);
-        nb_train_filtered = 1;
+        Train *result = NULL;
+        nb_train_filtered= soonest_train(*trains_filtered, &result, nb_train_filtered);
+        *trains_filtered = result;
     }
 
     return nb_train_filtered;
 }
 
-Train* soonest_train(Train trains[], int nb_train){
+int soonest_train(Train trains[], Train **filter_result, int nb_train){
 
     Time time_cmp = {23, 59};
-    Train* train_ptr = NULL;  
+    *filter_result = NULL;
+    int nb_train_filtered = 0;
 
     for(int i = 0; i < nb_train; i++){
 
+        printf("Candidat n° %d\n", i);
+        print_train(trains[i]);
+
         if(timecmp(trains[i].time_from, time_cmp) == -1){
 
+            printf("time_cmp : %d %d\n", time_cmp.hour, time_cmp.minute);
+            printf("Candidat n° %d a passé le test\n", i);
+
+            // On agrandit le tableau de Train, puis on pointe vers celui ci
+            *filter_result = realloc(*filter_result, sizeof(Train) * (nb_train_filtered + 1));
+
+            if (*filter_result == NULL)
+                perror("realloc");
+
+            // On copie le train qui valide les critères de recherche à la fin du tableau de Train
+            memcpy(&(*filter_result)[nb_train_filtered], &trains[i], sizeof(Train));
             memcpy(&time_cmp, &trains[i].time_from, sizeof(Time));
-            train_ptr = &trains[i];
+            nb_train_filtered++;
         }
     }
 
-    return train_ptr;
+    return nb_train_filtered;
 }
 
 int check_filter(Train train, Request req){
