@@ -99,8 +99,11 @@ int main(int argc, char **argv) {
             default :
         }
 
+        /*
         if (write(sock_server, &req, sizeof(req)) == -1)
             perror("write de la requête");
+        */
+        send_request(sock_server, req);
 
         if(choix == HORAIRE || choix == PLAGE  || choix == JOURNEE){
 
