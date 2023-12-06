@@ -79,3 +79,25 @@ void receive_train(int socket,Train *train){
     read(socket, &train->reduc, sizeof(train->reduc));
     read(socket, &train->suppl, sizeof(train->suppl));
 }
+ Request read_request(int socket) {
+    Request  query;
+    read(socket, &query.type, sizeof(query.type));
+    read(socket, &query.city_from, sizeof(query.city_from));
+    read(socket, &query.city_to, sizeof(query.city_to));
+    read(socket, &query.time_from_1.minute, sizeof(int));
+    read(socket, &query.time_from_1.hour, sizeof(int));
+    read(socket, &query.time_from_2.minute, sizeof(int));
+    read(socket, &query.time_from_2.hour, sizeof(int));
+    return query;
+}
+void write_request(int socket,Request query) {
+    int type = (int)query.type; 
+    write(socket, &type, sizeof(type));
+    write(socket, &query.city_from, sizeof(query.city_from));
+    write(socket, &query.city_to, sizeof(query.city_to));
+    write(socket, &query.time_from_1.minute, sizeof(int));
+    write(socket, &query.time_from_1.hour, sizeof(int));
+    write(socket, &query.time_from_2.minute, sizeof(int));
+    write(socket, &query.time_from_2.hour, sizeof(int));
+
+}
