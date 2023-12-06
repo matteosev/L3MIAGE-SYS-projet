@@ -6,18 +6,29 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
 
 #include "../headers/commons.h"
 
 int read_trains_from_file(char *filename, Train *trains, int maxTrains) ;
 int count_trains(char *filename);
-int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from, Time time_to);
-int check_filter(Train train, char* city_from, char* city_to, Time time_from, Time time_to);
+int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from_1, Time time_from_2, Request_type type);
+int check_filter(Train train, char* city_from, char* city_to, Time time_from, Time time_to, Request_type type);
+int timecmp(Time t1, Time t2);
+
+void end_child() {
+    wait(NULL);
+}
 
 int main(int argc, char **argv) {
     
     int sock_listen;
     struct sockaddr_in sockaddr;
+    struct sigaction ac;
+
+    ac.sa_handler = end_child;
+    ac.sa_flags = SA_RESTART;
+    sigaction(SIGCHLD, &ac, NULL);
     
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = 5000;
@@ -59,7 +70,7 @@ int main(int argc, char **argv) {
                     printf("Requête reçue : ");
                     print_request(req);
 
-                    int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req.city_from, req.city_to, req.time_from_1, req.time_from_2);
+                    int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req.city_from, req.city_to, req.time_from_1, req.time_from_2, req.type);
 
                     printf("Nombre de trains trouvés : %d\n", nb_train_filtered);
 
@@ -73,7 +84,7 @@ int main(int argc, char **argv) {
                         write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
                     }
 
-                } while(req.last == 0);
+                } while(req.type != FIN);
                 
                 printf("Connexion fermée normalement par le processus %d\n", getpid());
 
@@ -100,7 +111,7 @@ int main(int argc, char **argv) {
  * @param req Request Les critères de filtrage
  * @return La taille du tableau de trains filtré
  */
-int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from, Time time_to){
+int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, char* city_from, char* city_to, Time time_from, Time time_to, Request_type type){
 
     // Nombre de Trains qui valident les critères de recherche (aucun au début)
     int nb_train_filtered = 0;
@@ -109,7 +120,7 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
 
     for(int i = 0; i < nb_train; i++){
         // Si le Train n° i valide les critères de filtrage
-        if(check_filter(trains[i], city_from, city_to, time_from, time_to) == 1){
+        if(check_filter(trains[i], city_from, city_to, time_from, time_to, type) == 1){
 
             // On agrandit le tableau de Train, puis on fait pointer le pointeur passé en paramètre vers celui ci
             *trains_filtered = (Train *)realloc(t, sizeof(Train) * (nb_train_filtered + 1));
@@ -122,7 +133,7 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
     return nb_train_filtered;
 }
 
-int check_filter(Train train, char* city_from, char* city_to, Time time_from, Time time_to){
+int check_filter(Train train, char* city_from, char* city_to, Time time_from_1, Time time_from_2, Request_type type){
 
     if(strcmp(train.city_from, city_from) != 0)
         return 0;
@@ -130,12 +141,31 @@ int check_filter(Train train, char* city_from, char* city_to, Time time_from, Ti
     if(strcmp(train.city_to, city_to) != 0)
         return 0;
 
-    if(train.time_from.hour != time_from.hour || train.time_from.minute != time_from.minute)
-        return 0;
+    switch (type) {
 
-    if(train.time_to.hour != time_to.hour || train.time_to.minute != time_to.minute)
-        return 0;
+        case HORAIRE:
 
+            break;
+        
+        case PLAGE:
+            print_train(train);
+            int tot = timecmp(train.time_from, time_from_1);
+            int tard = timecmp(train.time_from, time_from_1);
+            printf("tot=%d tard=%d\n", tot, tard);
+            //if ( == -1 ||  == 1)
+                //return 0;
+            break;
+
+        case JOURNEE:
+            // Horaire de départ inutile
+            break;
+
+        case FIN:
+            break;
+        
+        default:
+    }
+    
     return 1;
 }
 

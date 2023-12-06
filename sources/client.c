@@ -11,14 +11,7 @@
 
 #include "../headers/commons.h"
 
-typedef enum 
-{
-    HORAIRE = 1,
-    PLAGE = 2,
-    JOURNEE = 3,
-    QUITTER = 4
 
-} Menu;
 
 int main(int argc, char **argv) {
 
@@ -38,11 +31,20 @@ int main(int argc, char **argv) {
 
     sock_server = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (connect(sock_server, (struct sockaddr *)&addr_server, sizeof(addr_server)) == -1)
+    int connect_tried = 0;
+    while (connect(sock_server, (struct sockaddr *)&addr_server, sizeof(addr_server)) == -1 && connect_tried < 10) {
+        printf("Tentative de connexion n°%d échouée\n", connect_tried);
+        connect_tried++;
+        sleep(1);
+    }
+
+    if (connect_tried == 10) {
         perror("connexion");
+        exit(1);
+    }
+        
 
     do{
-        req.last = 0;
         Train train;
         int choix;
 
@@ -51,7 +53,7 @@ int main(int argc, char **argv) {
         printf("%d. LE train disponible le + tôt à partir d'un horaire\n", HORAIRE);
         printf("%d. TOUS les trains dans une plage horaire\n", PLAGE);
         printf("%d. TOUS les trains de la journée\n", JOURNEE);
-        printf("%d. RIEN, bye\n", QUITTER);
+        printf("%d. RIEN, bye\n", FIN);
         printf("------------------------------------------------------------\n");
         scanf("%d", &choix);
 
@@ -63,7 +65,9 @@ int main(int argc, char **argv) {
             printf("Ville d'arrivée : ");
             scanf("%99s", req.city_to);
         }
-    
+
+        req.type = choix;
+
         switch(choix){
 
             case HORAIRE :
@@ -71,12 +75,13 @@ int main(int argc, char **argv) {
                 req.time_from_1.minute = 07;
                 req.time_from_2.hour = 12;
                 req.time_from_2.minute = 19;
+                
                 break;
             
             case PLAGE :
-                req.time_from_1.hour = 10;
+                req.time_from_1.hour = 8;
                 req.time_from_1.minute = 0;
-                req.time_from_2.hour = 12;
+                req.time_from_2.hour = 18;
                 req.time_from_2.minute = 0;
                 break;
 
@@ -87,8 +92,7 @@ int main(int argc, char **argv) {
                 req.time_from_2.minute = 60;
                 break;
 
-            case QUITTER :
-                req.last = 1;
+            case FIN :
                 printf("Merci et bonne journée !\n");
                 break;
 
@@ -118,7 +122,7 @@ int main(int argc, char **argv) {
             printf("\n");
         }
 
-    } while(req.last == 0);
+    } while(req.type != FIN);
 
     return 0;
 }
