@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include <sys/wait.h>
 
 #include "../headers/commons.h"
 
@@ -19,7 +20,12 @@ int timecmp(Time t1, Time t2);
 void end_child() {
     wait(NULL);
 }
-
+/*
+void handle_sigsegv() {
+    printf("Erreur de segmentation\n");
+    exit(1);
+}
+*/
 int main(int argc, char **argv) {
     
     int sock_listen;
@@ -29,6 +35,8 @@ int main(int argc, char **argv) {
     ac.sa_handler = end_child;
     ac.sa_flags = SA_RESTART;
     sigaction(SIGCHLD, &ac, NULL);
+
+    //signal(SIGSEGV, handle_sigsegv);
     
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = 5000;
@@ -116,16 +124,20 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
     // Nombre de Trains qui valident les critères de recherche (aucun au début)
     int nb_train_filtered = 0;
     // Tableau de Trains qui valident les critères de recherche (vide pour l'instant)
-    Train *t = NULL;
+    *trains_filtered = NULL;
 
     for(int i = 0; i < nb_train; i++){
         // Si le Train n° i valide les critères de filtrage
         if(check_filter(trains[i], city_from, city_to, time_from, time_to, type) == 1){
 
-            // On agrandit le tableau de Train, puis on fait pointer le pointeur passé en paramètre vers celui ci
-            *trains_filtered = (Train *)realloc(t, sizeof(Train) * (nb_train_filtered + 1));
+            // On agrandit le tableau de Train, puis on pointe vers celui ci
+            *trains_filtered = realloc(*trains_filtered, sizeof(Train) * (nb_train_filtered + 1));
+
+            if (*trains_filtered == NULL)
+                perror("realloc");
+
             // On copie le train qui valide les critères de recherche à la fin du tableau de Train
-            memcpy(trains_filtered[nb_train_filtered], &trains[i], sizeof(Train));
+            memcpy(&(*trains_filtered)[nb_train_filtered], &trains[i], sizeof(Train));
 
             nb_train_filtered++;
         }
@@ -150,10 +162,10 @@ int check_filter(Train train, char* city_from, char* city_to, Time time_from_1, 
         case PLAGE:
             print_train(train);
             int tot = timecmp(train.time_from, time_from_1);
-            int tard = timecmp(train.time_from, time_from_1);
+            int tard = timecmp(train.time_from, time_from_2);
             printf("tot=%d tard=%d\n", tot, tard);
-            //if ( == -1 ||  == 1)
-                //return 0;
+            if ( tot == -1 || tard == 1)
+                return 0;
             break;
 
         case JOURNEE:
