@@ -11,8 +11,6 @@
 
 #include "../headers/commons.h"
 
-
-
 int main(int argc, char **argv) {
 
     struct in_addr ip_server;
@@ -44,18 +42,9 @@ int main(int argc, char **argv) {
         perror("connexion");
         exit(1);
     }
-    
-    int connection_accepted;
-    if (read(sock_server, &connection_accepted, sizeof(connection_accepted)) == -1)
-        perror("read nombre de train");
-
-    // Accepté
-    if (connection_accepted == -1) {
-        printf("Connexion refusée : 1 seule connexion simultanée possible\n");
-        exit(0);
-    }
 
     do{
+
         Train train;
         int choix;
 
@@ -130,12 +119,10 @@ int main(int argc, char **argv) {
                 if (read(sock_server, &train, sizeof(train)) == -1)
                     perror("read train");
 
-                printf("%d : ", i);
-                print_train(train);
                 memcpy(&trains[i], &train, sizeof(Train));
+                display_train(train);
                 
             }
-            printf("\n");
 
             if(choix == HORAIRE && nb_train > 1){
 
@@ -151,9 +138,12 @@ int main(int argc, char **argv) {
                 switch(rep){
 
                     case 'y' :
+
                         Time time_cmp={23,59};
                         Train * fastest;
+
                         for(int i = 0; i < nb_train; i++){
+
                             Time duration = time_difference(trains[i].time_from,trains[i].time_to);
 
                             if(timecmp(duration, time_cmp)==-1){
@@ -161,28 +151,27 @@ int main(int argc, char **argv) {
                                 fastest=&trains[i];
                             }
                         }
-                        print_train(*fastest);
-
+                        display_train(*fastest);
                         break;
 
                     case 'n' :
+
                         double price_min=99999.9999;
                         Train * cheapest;
+
                         for(int i =0; i<nb_train;i++){
+
                             if(trains[i].price < price_min){
+
                                 price_min=trains[i].price;
                                 cheapest=&trains[i];
                             }
                         }
-                        print_train(*cheapest);
-
-                    
-
+                        display_train(*cheapest);
                         break;
 
                     default :
-                }
-                
+                }     
             }
         }
 
@@ -190,7 +179,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
-
-
-

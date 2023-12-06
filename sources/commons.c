@@ -11,6 +11,14 @@ void print_request(Request r) {
     printf("{ city_from=%s city_to=%s time_from_1=%02d:%02d time_from_2=%02d:%02d type=%d }\n", r.city_from, r.city_to, r.time_from_1.hour, r.time_from_1.minute, r.time_from_2.hour, r.time_from_2.minute, r.type);
 }
 
+void display_train(Train train){
+
+    printf("Train n°%d\n", train.id);
+    printf("Destination : %s\n", train.city_to);
+    printf("Heure de départ : %d:%d\n", train.time_from.hour, train.time_from.minute);
+    printf("Heure d'arrivé : %d:%d\n", train.time_to.hour, train.time_to.minute);
+    printf("Prix du billet : %.2f euros\n", train.price);
+}
 
 Time time_difference(Time t1,Time t2){
     Time ret;

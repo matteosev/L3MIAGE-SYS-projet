@@ -1,5 +1,4 @@
 #define PORT 5000
-#define NB_CLIENT_MAX 1000
 
 typedef enum 
 {
@@ -36,5 +35,6 @@ typedef struct {
 
 void print_train(Train t);
 void print_request(Request r);
+void display_train(Train train);
 int timecmp(Time t1, Time t2);
 Time time_difference(Time t1,Time t2);

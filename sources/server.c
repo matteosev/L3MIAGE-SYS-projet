@@ -31,10 +31,6 @@ int main(int argc, char **argv) {
     int sock_listen;
     struct sockaddr_in sockaddr;
     struct sigaction ac;
-    int ips[NB_CLIENT_MAX];
-    int nb_client = 0;
-
-    memset(ips, 0, NB_CLIENT_MAX * sizeof(int));
 
     ac.sa_handler = end_child;
     ac.sa_flags = SA_RESTART;
@@ -66,67 +62,52 @@ int main(int argc, char **argv) {
 
         int sock_service = accept(sock_listen, (struct sockaddr *)&sockaddr, &size_addr);
 
-        int ip_present = 0;
-        for (int i = 0; i < nb_client && ip_present == 0; i++) {
-            if (ips[i] == sockaddr.sin_addr.s_addr)
-                ip_present = -1;
-        }
+        int pid = fork();
 
-        if (write(sock_service, &ip_present, sizeof(ip_present)) == -1)
-            perror("write du flag ip");
-
-        if (ip_present == 0) {
-
-            ips[nb_client] = sockaddr.sin_addr.s_addr;
-            nb_client++;
+        switch(pid) {
+            case -1:
             
-            int pid = fork();
+                perror("fork");
+                break;
 
-            switch(pid) {
-                case -1:
-                    perror("fork");
-                    break;
+            case 0: // fils
 
-                case 0: // fils
-                    close(sock_listen);
+                close(sock_listen);
+                Request req;
 
+                do{
+                    read(sock_service, &req, sizeof(req));
+
+                    printf("Requête reçue : ");
+                    print_request(req);
+
+                    int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req);
+
+                    printf("Nombre de trains trouvés : %d\n", nb_train_filtered);
+
+                    if (write(sock_service, &nb_train_filtered, sizeof(nb_train_filtered)) == -1)
+                        perror("write du nombre de train");
                     
-
-                    Request req;
-                    do{
-                        read(sock_service, &req, sizeof(req));
-
-                        printf("Requête reçue : ");
-                        print_request(req);
-
-                        int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req);
-
-                        printf("Nombre de trains trouvés : %d\n", nb_train_filtered);
-
-                        if (write(sock_service, &nb_train_filtered, sizeof(nb_train_filtered)) == -1)
-                            perror("write du nombre de train");
+                    for(int i = 0; i < nb_train_filtered; i++){
                         
-                        for(int i = 0; i < nb_train_filtered; i++){
-                            
-                            printf("%d : ", i);
-                            print_train(filtered_trains[i]);
-                            write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
-                        }
+                        printf("%d : ", i);
+                        print_train(filtered_trains[i]);
+                        write(sock_service, &filtered_trains[i], sizeof(filtered_trains[i]));
+                    }
 
-                    } while(req.type != FIN);
-                    
-                    printf("Connexion fermée normalement par le processus %d\n", getpid());
-                    
-                    ips[nb_client - 1] = 0;
-                    close(sock_service);
-                    exit(0);
+                } while(req.type != FIN);
+                
+                printf("Connexion fermée normalement par le processus %d\n", getpid());
+                close(sock_service);
+                exit(0);
 
-                default: // père
-                    close(sock_service);
-                    printf("Connexion établie avec %d et gérée par le processus %d\n", sockaddr.sin_addr.s_addr, pid);
-                    break;
-            }
+            default: // père
+
+                close(sock_service);
+                printf("Connexion établie avec %d et gérée par le processus %d\n", sockaddr.sin_addr.s_addr, pid);
+                break;
         }
+        
     }
 
     close(sock_listen);
@@ -246,8 +227,8 @@ int check_filter(Train train, Request req){
     return 1;
 }
 
-
 int count_trains(char *filename) {
+
     FILE *file = fopen(filename, "r");
     int nbtrains = 0;
 
@@ -267,6 +248,7 @@ int count_trains(char *filename) {
 }
 
 int read_trains_from_file(char *filename, Train *trains, int maxTrains) {
+    
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {
