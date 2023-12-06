@@ -15,7 +15,6 @@ int read_trains_from_file(char *filename, Train *trains, int maxTrains) ;
 int count_trains(char *filename);
 int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req);
 int check_filter(Train train, Request req);
-int timecmp(Time t1, Time t2);
 int soonest_train(Train trains[], Train **filter_result, int nb_train);
 
 void end_child() {
@@ -165,7 +164,8 @@ int soonest_train(Train trains[], Train **filter_result, int nb_train){
         printf("Candidat n° %d\n", i);
         print_train(trains[i]);
 
-        if(timecmp(trains[i].time_from, time_cmp) == -1){
+        // Heure plus tôt ou égale
+        if(timecmp(trains[i].time_from, time_cmp) <= 0){
 
             printf("time_cmp : %d %d\n", time_cmp.hour, time_cmp.minute);
             printf("Candidat n° %d a passé le test\n", i);
@@ -223,23 +223,6 @@ int check_filter(Train train, Request req){
     return 1;
 }
 
-/**
- * Compare 2 structures Time
- * @param t1 Time 1er temps comparé
- * @param t2 Time 2e temps comparé
- * @return -1 si t1 < t2 (plus tôt), 0 si t1 == t2 (même heure), 1 si t1 > t2 (plus tard)
- */
-int timecmp(Time t1, Time t2) {
-
-    if (t1.hour == t2.hour) {
-
-        if (t1.minute == t2.minute)
-            return 0;
-
-        return t1.minute > t2.minute ? 1 : -1;
-    }
-    return t1.hour > t2.hour ? 1 : -1;
-}
 
 int count_trains(char *filename) {
     FILE *file = fopen(filename, "r");

@@ -71,25 +71,25 @@ int main(int argc, char **argv) {
         switch(choix){
 
             case HORAIRE :
-                req.time_from_1.hour = 10;
-                req.time_from_1.minute = 07;
-                req.time_from_2.hour = 12;
-                req.time_from_2.minute = 19;
-                
+
+                printf("Horaire de départ hh:mm : ");
+                scanf("%d:%d", &req.time_from_1.hour, &req.time_from_1.minute);
+                printf("\n");       
                 break;
             
             case PLAGE :
-                req.time_from_1.hour = 8;
-                req.time_from_1.minute = 0;
-                req.time_from_2.hour = 18;
-                req.time_from_2.minute = 0;
+
+                printf("Horaire de départ n°1 hh:mm : ");
+                scanf("%d:%d", &req.time_from_1.hour, &req.time_from_1.minute);
+                printf("\n");  
+
+                printf("Horaire de départ n°2 hh:mm : ");
+                scanf("%d:%d", &req.time_from_2.hour, &req.time_from_2.minute);
+                printf("\n");         
                 break;
 
             case JOURNEE :
-                req.time_from_1.hour = 25;
-                req.time_from_1.minute = 60;
-                req.time_from_2.hour = 25;
-                req.time_from_2.minute = 60;
+
                 break;
 
             case FIN :
@@ -111,6 +111,9 @@ int main(int argc, char **argv) {
 
             printf("Nombre de train : %d\n", nb_train);
 
+            Train trains[nb_train];
+
+
             for(int i = 0; i < nb_train && i < 10; i++){
 
                 if (read(sock_server, &train, sizeof(train)) == -1)
@@ -118,11 +121,51 @@ int main(int argc, char **argv) {
 
                 printf("%d : ", i);
                 print_train(train);
+                memcpy(&trains[i], &train, sizeof(Train));
+                
             }
             printf("\n");
+
+            if(choix == HORAIRE && nb_train > 1){
+
+                char rep = ' ';
+
+                while(rep != 'y' && rep != 'n'){
+
+                    printf("%d options sont disponibles, souhaitez-vous le train le plus rapide ? (y/n)\n", nb_train);
+                    scanf("%c", &rep);
+
+                    switch(rep){
+
+                        case 'y' :
+                            Time time_cmp={23,59};
+                            Train * fastest;
+                            for(int i = 0; i < nb_train; i++){
+                                Time duration = time_difference(trains[i].time_from,trains[i].time_to);
+
+                                if(timecmp(duration, time_cmp)==-1){
+                                    memcpy(&time_cmp, &duration, sizeof(Time));
+                                    fastest=&trains[i];
+                                }
+                            }
+                            print_train(*fastest);
+
+                            break;
+
+                        case 'n' :
+                        
+
+                            break;
+
+                        default :
+                    }
+                }
+            }
         }
 
     } while(req.type != FIN);
 
     return 0;
 }
+
+

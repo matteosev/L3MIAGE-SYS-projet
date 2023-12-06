@@ -33,3 +33,5 @@ typedef struct {
 
 void print_train(Train t);
 void print_request(Request r);
+int timecmp(Time t1, Time t2);
+Time time_difference(Time t1,Time t2);
