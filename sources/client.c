@@ -15,18 +15,20 @@
 
 int main(int argc, char **argv) {
 
-    struct hostent *host;
     struct in_addr ip_server;
     struct sockaddr_in addr_server;
     int sock_server;
     Request req;
 
-    host = gethostbyname("localhost");
+    // Connexion locale
+    //struct hostent *host = gethostbyname("localhost");
+    //ip_server.s_addr = *host->h_addr_list[0];
 
-    ip_server.s_addr = *host->h_addr_list[0];
+    // Connexion distante
+    ip_server.s_addr = inet_addr("152.77.82.87");
 
     addr_server.sin_family = AF_INET;
-    addr_server.sin_port = 5000;
+    addr_server.sin_port = PORT;
     addr_server.sin_addr = ip_server;
 
     sock_server = socket(AF_INET, SOCK_STREAM, 0);
@@ -42,7 +44,16 @@ int main(int argc, char **argv) {
         perror("connexion");
         exit(1);
     }
-        
+    
+    int connection_accepted;
+    if (read(sock_server, &connection_accepted, sizeof(connection_accepted)) == -1)
+        perror("read nombre de train");
+
+    // Accepté
+    if (connection_accepted == -1) {
+        printf("Connexion refusée : 1 seule connexion simultanée possible\n");
+        exit(0);
+    }
 
     do{
         Train train;
@@ -130,46 +141,48 @@ int main(int argc, char **argv) {
 
                 char rep = ' ';
 
+                printf("%d options sont disponibles, souhaitez-vous le train le plus rapide ? (y/n)\n", nb_train);
                 while(rep != 'y' && rep != 'n'){
 
-                    printf("%d options sont disponibles, souhaitez-vous le train le plus rapide ? (y/n)\n", nb_train);
                     scanf("%c", &rep);
 
-                    switch(rep){
-
-                        case 'y' :
-                            Time time_cmp={23,59};
-                            Train * fastest;
-                            for(int i = 0; i < nb_train; i++){
-                                Time duration = time_difference(trains[i].time_from,trains[i].time_to);
-
-                                if(timecmp(duration, time_cmp)==-1){
-                                    memcpy(&time_cmp, &duration, sizeof(Time));
-                                    fastest=&trains[i];
-                                }
-                            }
-                            print_train(*fastest);
-
-                            break;
-
-                        case 'n' :
-                            double price_min=99999.9999;
-                            Train * cheapest;
-                            for(int i =0; i<nb_train;i++){
-                                if(trains[i].price < price_min){
-                                    price_min=trains[i].price;
-                                    cheapest=&trains[i];
-                                }
-                            }
-                            print_train(*cheapest);
-
-                        
-
-                            break;
-
-                        default :
-                    }
                 }
+
+                switch(rep){
+
+                    case 'y' :
+                        Time time_cmp={23,59};
+                        Train * fastest;
+                        for(int i = 0; i < nb_train; i++){
+                            Time duration = time_difference(trains[i].time_from,trains[i].time_to);
+
+                            if(timecmp(duration, time_cmp)==-1){
+                                memcpy(&time_cmp, &duration, sizeof(Time));
+                                fastest=&trains[i];
+                            }
+                        }
+                        print_train(*fastest);
+
+                        break;
+
+                    case 'n' :
+                        double price_min=99999.9999;
+                        Train * cheapest;
+                        for(int i =0; i<nb_train;i++){
+                            if(trains[i].price < price_min){
+                                price_min=trains[i].price;
+                                cheapest=&trains[i];
+                            }
+                        }
+                        print_train(*cheapest);
+
+                    
+
+                        break;
+
+                    default :
+                }
+                
             }
         }
 

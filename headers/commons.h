@@ -1,3 +1,6 @@
+#define PORT 5000
+#define NB_CLIENT_MAX 1000
+
 typedef enum 
 {
     HORAIRE = 1,
