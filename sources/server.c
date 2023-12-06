@@ -16,6 +16,7 @@ int count_trains(char *filename);
 int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req);
 int check_filter(Train train, Request req);
 int timecmp(Time t1, Time t2);
+Train* soonest_train(Train trains[], int nb_train);
 
 void end_child() {
     wait(NULL);
@@ -142,7 +143,31 @@ int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtere
             nb_train_filtered++;
         }
     }
+
+    if(req.type == HORAIRE){
+
+        *trains_filtered = soonest_train(*trains_filtered, nb_train_filtered);
+        nb_train_filtered = 1;
+    }
+
     return nb_train_filtered;
+}
+
+Train* soonest_train(Train trains[], int nb_train){
+
+    Time time_cmp = {23, 59};
+    Train* train_ptr = NULL;  
+
+    for(int i = 0; i < nb_train; i++){
+
+        if(timecmp(trains[i].time_from, time_cmp) == -1){
+
+            memcpy(&time_cmp, &trains[i].time_from, sizeof(Time));
+            train_ptr = &trains[i];
+        }
+    }
+
+    return train_ptr;
 }
 
 int check_filter(Train train, Request req){
@@ -157,12 +182,16 @@ int check_filter(Train train, Request req){
 
         case HORAIRE:
 
+            if ( timecmp(train.time_from, req.time_from_1) == -1)
+                return 0;
+
             break;
         
         case PLAGE:
 
             if ( timecmp(train.time_from, req.time_from_1) == -1 || timecmp(train.time_from, req.time_from_2) == 1)
                 return 0;
+
             break;
 
         case JOURNEE:
