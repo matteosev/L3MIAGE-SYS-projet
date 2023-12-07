@@ -1,3 +1,8 @@
+/**
+ * \file parsing.c
+ * \brief Extraction des données du fichier csv
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,3 +1,10 @@
+/**
+ * \file client.c
+ * \brief Point d'entrée du client
+ *
+ * Se connecte au serveur et dialogue avec l'utilisateur
+ *
+ */
 
 #include <stdio.h>
 #include <unistd.h>
@@ -16,7 +23,7 @@
 #include "../headers/time.h"
 
 /**
- * Se connecte au serveur et dialogue avec l'utilisateur
+ * 
  * @param argv[1] Adresse IPv4 du serveur auquel le client doit se connecter
  * @param argv[2] Numéro de port écouté par le serveur
  * @return 0 normalement, 1 en cas d'erreur

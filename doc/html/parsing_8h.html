@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Tchou Tchou: Référence du fichier headers/parsing.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Tchou Tchou
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_7f57b1e41c5acd0e859ae5f3a2b075a9.html">headers</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Fonctions</a>  </div>
+  <div class="headertitle">
+<div class="title">Référence du fichier parsing.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><div class="dynheader">
+Ce graphe montre quels fichiers incluent directement ou indirectement ce fichier :</div>
+<div class="dyncontent">
+<div class="center"><img src="parsing_8h__dep__incl.png" border="0" usemap="#aheaders_2parsing_8hdep" alt=""/></div>
+<map name="aheaders_2parsing_8hdep" id="aheaders_2parsing_8hdep">
+<area shape="rect" title=" " alt="" coords="5,5,144,32"/>
+<area shape="rect" href="server_8c.html" title="Point d&#39;entrée du serveur." alt="" coords="11,80,139,107"/>
+</map>
+</div>
+</div>
+<p><a href="parsing_8h_source.html">Aller au code source de ce fichier.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Fonctions</h2></td></tr>
+<tr class="memitem:a8d0c02ae94c2170cd0bfc56a77d04ef4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parsing_8h.html#a8d0c02ae94c2170cd0bfc56a77d04ef4">read_trains_from_file</a> (char *filename, <a class="el" href="structTrain.html">Train</a> *trains, int maxTrains, char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH], int *city_count)</td></tr>
+<tr class="separator:a8d0c02ae94c2170cd0bfc56a77d04ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a425656ee03c79ef2545c27430b5d0fdb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parsing_8h.html#a425656ee03c79ef2545c27430b5d0fdb">count_trains</a> (char *filename)</td></tr>
+<tr class="separator:a425656ee03c79ef2545c27430b5d0fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1005dc703d08db2c06ca08976cbcdaf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parsing_8h.html#a1005dc703d08db2c06ca08976cbcdaf6">add_city_if_new</a> (char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH], int *city_count, const char *city)</td></tr>
+<tr class="separator:a1005dc703d08db2c06ca08976cbcdaf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentation des fonctions</h2>
+<a id="a1005dc703d08db2c06ca08976cbcdaf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1005dc703d08db2c06ca08976cbcdaf6">&#9670;&nbsp;</a></span>add_city_if_new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void add_city_if_new </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>cities</em>[MAX_CITIES][MAX_CITY_NAME_LENGTH], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>city_count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>city</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Ajoute une nouvelle ville dans le tableau de villes si elle n'y est pas déjà.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cities</td><td>Tableau contenant les villes. </td></tr>
+    <tr><td class="paramname">city_count</td><td>Nombre actuel de villes dans le tableau. </td></tr>
+    <tr><td class="paramname">city</td><td>La ville à ajouter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a425656ee03c79ef2545c27430b5d0fdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a425656ee03c79ef2545c27430b5d0fdb">&#9670;&nbsp;</a></span>count_trains()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int count_trains </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Compte le nombre de trains dans un fichier CSV.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Le nom du fichier à lire. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Le nombre de lignes (trains) dans le fichier. </dd></dl>
+
+</div>
+</div>
+<a id="a8d0c02ae94c2170cd0bfc56a77d04ef4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d0c02ae94c2170cd0bfc56a77d04ef4">&#9670;&nbsp;</a></span>read_trains_from_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int read_trains_from_file </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structTrain.html">Train</a> *&#160;</td>
+          <td class="paramname"><em>trains</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>maxTrains</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>cities</em>[MAX_CITIES][MAX_CITY_NAME_LENGTH], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>city_count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Lit les informations des trains depuis un fichier CSV et les stocke dans un tableau.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Nom du fichier CSV à lire. </td></tr>
+    <tr><td class="paramname">trains</td><td>Tableau de trains à remplir. </td></tr>
+    <tr><td class="paramname">maxTrains</td><td>Nombre maximum de trains à lire. </td></tr>
+    <tr><td class="paramname">cities</td><td>Tableau de villes à remplir. </td></tr>
+    <tr><td class="paramname">city_count</td><td>Nombre de villes dans le tableau. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Le nombre de trains lus. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

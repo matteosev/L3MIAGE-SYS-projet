@@ -1,3 +1,11 @@
+/**
+ * \file server.c
+ * \brief Point d'entrée du serveur
+ *
+ * Ecoute les requêtes effectuées sur un port et répond
+ *
+ */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -59,7 +67,7 @@ void handle_sigchld() {
 }
 
 /**
- * Ecoute les requêtes effectuées sur un port et répond
+ * 
  * @param argv[1] Chemin vers le fichier csv qui sert de base de données
  * @param argv[2] Numéro de port écouté par le serveur
  * @return 0 normalement, 1 en cas d'erreur

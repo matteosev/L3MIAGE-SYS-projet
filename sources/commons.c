@@ -1,3 +1,11 @@
+/**
+ * \file commons.c
+ * \brief Fonctions de debug
+ *
+ * Fonctions d'affichage des structures
+ *
+ */
+
 #include <stdio.h>
 
 #include "../headers/commons.h"

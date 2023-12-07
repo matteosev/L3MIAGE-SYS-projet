@@ -1,3 +1,8 @@
+/**
+ * \file std_output.c
+ * \brief Affichages destinés à l'utilisateur
+ */
+
 #include <stdio.h>
 #include <string.h>
 

@@ -1,3 +1,11 @@
+/**
+ * \file filter.c
+ * \brief Fonctions de filtrage d'un tableau de trains
+ *
+ * 
+ *
+ */
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

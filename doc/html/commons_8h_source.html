@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Tchou Tchou:  Fichier source de headers/commons.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Tchou Tchou
+   &#160;<span id="projectnumber">1.0</span>
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Recherche','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_7f57b1e41c5acd0e859ae5f3a2b075a9.html">headers</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">commons.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="commons_8h.html">Aller à la documentation de ce fichier.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef __COMMONS_H__</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define __COMMONS_H__</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define MAX_CITIES 250</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define MAX_CITY_NAME_LENGTH 100</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bf">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    HORAIRE = 1,    </div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfa3a61dd0dffcc8f36eff3ffed2a22deee">   18</a></span>&#160;    <a class="code" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfa3a61dd0dffcc8f36eff3ffed2a22deee">PLAGE</a> = 2,      </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfac092f3e020b3091fee224057bbb1db89">   19</a></span>&#160;    <a class="code" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfac092f3e020b3091fee224057bbb1db89">JOURNEE</a> = 3,    </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfaea3c073df31939c172972ef6ccbc988b">FIN</a> = 4         </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfaea3c073df31939c172972ef6ccbc988b">   22</a></span>&#160;} <a class="code" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bf">Request_type</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structTime.html">   28</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct  </span>{</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">int</span> hour;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">int</span> minute;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;} <a class="code" href="structTime.html">Time</a>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="structTrain.html">   37</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">int</span> id;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">char</span> city_from[100];</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">char</span> city_to[100];</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="structTime.html">Time</a> time_from;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="structTime.html">Time</a> time_to;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">double</span> price;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> reduc;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">int</span> suppl;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;} <a class="code" href="structTrain.html">Train</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structRequest.html">   52</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bf">Request_type</a> type;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">char</span> city_from[100];</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">char</span> city_to[100];</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="structTime.html">Time</a> time_from_1;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="structTime.html">Time</a> time_from_2;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;} <a class="code" href="structRequest.html">Request</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keywordtype">void</span> <a class="code" href="commons_8h.html#a108c52fe83be4eacad5f348660f6e453">print_train</a>(<a class="code" href="structTrain.html">Train</a> t);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keywordtype">void</span> <a class="code" href="commons_8h.html#a3e55b1d2947b063a79d41044552819f7">print_request</a>(<a class="code" href="structRequest.html">Request</a> r);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="acommons_8h_html_a108c52fe83be4eacad5f348660f6e453"><div class="ttname"><a href="commons_8h.html#a108c52fe83be4eacad5f348660f6e453">print_train</a></div><div class="ttdeci">void print_train(Train t)</div><div class="ttdef"><b>Definition:</b> commons.c:18</div></div>
+<div class="ttc" id="acommons_8h_html_a3e55b1d2947b063a79d41044552819f7"><div class="ttname"><a href="commons_8h.html#a3e55b1d2947b063a79d41044552819f7">print_request</a></div><div class="ttdeci">void print_request(Request r)</div><div class="ttdef"><b>Definition:</b> commons.c:29</div></div>
+<div class="ttc" id="acommons_8h_html_ad85d1f48c420410a49689ba4e52be6bf"><div class="ttname"><a href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bf">Request_type</a></div><div class="ttdeci">Request_type</div><div class="ttdef"><b>Definition:</b> commons.h:16</div></div>
+<div class="ttc" id="acommons_8h_html_ad85d1f48c420410a49689ba4e52be6bfa3a61dd0dffcc8f36eff3ffed2a22deee"><div class="ttname"><a href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfa3a61dd0dffcc8f36eff3ffed2a22deee">PLAGE</a></div><div class="ttdeci">@ PLAGE</div><div class="ttdef"><b>Definition:</b> commons.h:18</div></div>
+<div class="ttc" id="acommons_8h_html_ad85d1f48c420410a49689ba4e52be6bfac092f3e020b3091fee224057bbb1db89"><div class="ttname"><a href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfac092f3e020b3091fee224057bbb1db89">JOURNEE</a></div><div class="ttdeci">@ JOURNEE</div><div class="ttdef"><b>Definition:</b> commons.h:19</div></div>
+<div class="ttc" id="acommons_8h_html_ad85d1f48c420410a49689ba4e52be6bfaea3c073df31939c172972ef6ccbc988b"><div class="ttname"><a href="commons_8h.html#ad85d1f48c420410a49689ba4e52be6bfaea3c073df31939c172972ef6ccbc988b">FIN</a></div><div class="ttdeci">@ FIN</div><div class="ttdef"><b>Definition:</b> commons.h:20</div></div>
+<div class="ttc" id="astructRequest_html"><div class="ttname"><a href="structRequest.html">Request</a></div><div class="ttdoc">Modélise une requête envoyée par le client.</div><div class="ttdef"><b>Definition:</b> commons.h:52</div></div>
+<div class="ttc" id="astructTime_html"><div class="ttname"><a href="structTime.html">Time</a></div><div class="ttdoc">Modélise un horaire en heures et minutes.</div><div class="ttdef"><b>Definition:</b> commons.h:28</div></div>
+<div class="ttc" id="astructTrain_html"><div class="ttname"><a href="structTrain.html">Train</a></div><div class="ttdoc">Modélise un train.</div><div class="ttdef"><b>Definition:</b> commons.h:37</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

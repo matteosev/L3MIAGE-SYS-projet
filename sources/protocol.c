@@ -1,3 +1,8 @@
+/**
+ * \file protocol.c
+ * \brief Protocole d'échange de données
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

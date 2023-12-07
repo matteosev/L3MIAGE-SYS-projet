@@ -1,3 +1,8 @@
+/**
+ * \file std_input.c
+ * \brief Entrées utilisateur
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>

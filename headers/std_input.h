@@ -1,3 +1,7 @@
+/**
+ * \file std_input.h
+ */
+
 char yes_or_no_verification(int nb_train);
 int cities_check(char *input_city, char cities[][100]);
 void to_correct_format(char* input_city);
