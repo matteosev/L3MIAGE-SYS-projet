@@ -24,7 +24,7 @@ int count_trains(char *filename) {
     return nbtrains + 1;
 }
 
-int read_trains_from_file(char *filename, Train *trains, int maxTrains) {
+int read_trains_from_file(char *filename, Train *trains, int maxTrains, char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH], int *city_count) {
 
     FILE *file = fopen(filename, "r");
 
@@ -45,6 +45,9 @@ int read_trains_from_file(char *filename, Train *trains, int maxTrains) {
 
         token = strtok_r(NULL, ";", &rest); // City From
         strcpy(trains[i].city_from, token);
+
+        add_city_if_new(cities, city_count, trains[i].city_from);
+
 
         token = strtok_r(NULL, ";", &rest); // City To
         strcpy(trains[i].city_to, token);
@@ -84,4 +87,23 @@ int read_trains_from_file(char *filename, Train *trains, int maxTrains) {
 
     fclose(file);
     return i; // Number of trains read
+}
+
+
+
+void add_city_if_new(char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH], int *city_count, const char *city) {
+    for (int i = 0; i < *city_count; i++) {
+        if (strcmp(cities[i], city) == 0) {
+            return; 
+        }
+    }
+
+    
+    if (*city_count < MAX_CITIES) {
+        strncpy(cities[*city_count], city, MAX_CITY_NAME_LENGTH);
+        cities[*city_count][MAX_CITY_NAME_LENGTH - 1] = '\0'; // Ensure null termination
+        (*city_count)++;
+    } else {
+        fprintf(stderr, "City limit reached, unable to add more cities.\n");
+    }
 }
