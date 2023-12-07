@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
     //ip_server.s_addr = *host->h_addr_list[0];
 
     // Connexion distante
-    ip_server.s_addr = inet_addr("152.77.82.85");
+    ip_server.s_addr = inet_addr("152.77.82.87");
 
     addr_server.sin_family = AF_INET;
     addr_server.sin_port = PORT;

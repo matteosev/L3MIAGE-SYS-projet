@@ -29,6 +29,7 @@ int main(int argc, char **argv) {
     int sock_listen;
     struct sockaddr_in sockaddr;
     struct sigaction ac;
+    char *db_filename = argv[1];
 
     ac.sa_handler = end_child;
     ac.sa_flags = SA_RESTART;
@@ -47,14 +48,13 @@ int main(int argc, char **argv) {
 
     // Lecture du fichier csv "base de données"
     // argv[1] : nom du fichier cdv, 1e paramètre de la ligne de commande
-    const int nb_train = count_trains(argv[1]);
+    const int nb_train = count_trains(db_filename);
     Train trains[nb_train];
-    read_trains_from_file(argv[1], trains, nb_train);
     
     char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH];
     int city_count = 0;
 
-    read_trains_from_file(csv, trains, nb_train, cities, &city_count);
+    read_trains_from_file(db_filename, trains, nb_train, cities, &city_count);
     
     while(1) {
 
