@@ -1,7 +1,6 @@
 #ifndef __COMMONS_H__
 #define __COMMONS_H__
 
-#define PORT 5000
 #define MAX_CITIES 250
 #define MAX_CITY_NAME_LENGTH 100
 

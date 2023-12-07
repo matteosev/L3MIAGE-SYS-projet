@@ -58,8 +58,19 @@ void handle_sigchld() {
     nb_child--;
 }
 
+/**
+ * Ecoute les requêtes effectuées sur un port et répond
+ * @param argv[1] Chemin vers le fichier csv qui sert de base de données
+ * @param argv[2] Numéro de port écouté par le serveur
+ * @return 0 normalement, 1 en cas d'erreur
+*/
 int main(int argc, char **argv) {
     
+    if (argc != 3) {
+        printf("Le serveur a besoin du chemin vers le fichier csv et d'un numéro de port\n");
+        exit(1);
+    }
+
     int sock_listen;
     struct sockaddr_in sockaddr;
     char *db_filename = argv[1];
@@ -68,7 +79,7 @@ int main(int argc, char **argv) {
     signal(SIGCHLD, handle_sigchld);
     
     sockaddr.sin_family = AF_INET;
-    sockaddr.sin_port = PORT;
+    sockaddr.sin_port = atoi(argv[2]);
     sockaddr.sin_addr.s_addr = INADDR_ANY;  // sin_addr est de type 'struct in_addr'
 
     socklen_t size_addr = sizeof(sockaddr);
@@ -78,7 +89,7 @@ int main(int argc, char **argv) {
     listen(sock_listen, 0);
 
     // Lecture du fichier csv "base de données"
-    // argv[1] : nom du fichier csv, 1e paramètre de la ligne de commande
+    // argv[1] : nom du fichier csv, paramètre 1 de la ligne de commande
     const int nb_train = count_trains(db_filename);
     Train trains[nb_train];
     
