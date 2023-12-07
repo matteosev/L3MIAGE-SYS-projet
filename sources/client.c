@@ -36,80 +36,63 @@ int main(int argc, char **argv) {
     addr_server.sin_addr = ip_server;
 
     sock_server = socket(AF_INET, SOCK_STREAM, 0);
-
-    int connect_tried = 0;
-    while (connect(sock_server, (struct sockaddr *)&addr_server, sizeof(addr_server)) == -1 && connect_tried < 10) {
-        printf("Tentative de connexion n°%d échouée\n", connect_tried);
-        connect_tried++;
-        sleep(1);
-    }
-
-    if (connect_tried == 10) {
+ 
+    if(connect(sock_server, (struct sockaddr *)&addr_server, sizeof(addr_server)) == -1) {
         perror("connexion");
         exit(1);
     }
+
     if (read(sock_server, &city_count, sizeof(city_count)) == -1) {
-                perror("read city count");
-                exit(1);
-            }
+        perror("read city count");
+        exit(1);
+    }
 
-            for (int i = 0; i < city_count; i++) {
-                if (read(sock_server, cities[i], sizeof(cities[i])) == -1) {
-                    perror("Error reading city data");
-                    exit(1);
-                }
-            }
-
+    for (int i = 0; i < city_count; i++) {
+        if (read(sock_server, cities[i], sizeof(cities[i])) == -1) {
+            perror("Error reading city data");
+            exit(1);
+        }
+    }
 
     do{
 
-        //Train train;
-        int choix;
-
-        printf("------------------------------------------------------------\n");
-        printf("Chercher, entre 2 villes ...\n");
-        printf("%d. LE train disponible le + tôt à partir d'un horaire\n", HORAIRE);
-        printf("%d. TOUS les trains dans une plage horaire\n", PLAGE);
-        printf("%d. TOUS les trains de la journée\n", JOURNEE);
-        printf("%d. RIEN, bye\n", FIN);
-        printf("------------------------------------------------------------\n");
-        scanf("%d", &choix);
+        int choix = choices_display();
 
         if(choix == HORAIRE || choix == PLAGE  || choix == JOURNEE){
 
-            
-            // Print the cities
-            printf("Villes disponibles:\n");
-            for (int i = 0; i < city_count; i++) {
-                printf("%d. %s\n", i + 1, cities[i]);
-            }
+            char input_city_from[100];
+            char input_city_to[100];
+            display_cities(cities, city_count);
 
-            printf("Ville de départ : ");
-            scanf("%99s", req.city_from);
-            printf("Ville d'arrivée : ");
-            scanf("%99s", req.city_to);
+            city_check(input_city_from, cities, 1);
+            strcpy(req.city_from, input_city_from);
+
+            city_check(input_city_to, cities, 2);
+            strcpy(req.city_to, input_city_to);
         }
 
         req.type = choix;
 
         switch(choix){
 
+            Time choosen_time;
+
             case HORAIRE :
 
-                printf("Horaire de départ hh:mm : ");
-                scanf("%d:%d", &req.time_from_1.hour, &req.time_from_1.minute);
-                printf("\n");       
+                check_time(&choosen_time, 1);
+                req.time_from_1.hour = choosen_time.hour;
+                req.time_from_1.minute = choosen_time.minute;
                 break;
             
             case PLAGE :
 
-                printf("Horaire de départ n°1 hh:mm : ");
-                scanf("%d:%d", &req.time_from_1.hour, &req.time_from_1.minute);
-                printf("\n");  
-
-                printf("Horaire de départ n°2 hh:mm : ");
-                scanf("%d:%d", &req.time_from_2.hour, &req.time_from_2.minute);
-                printf("\n");         
+                check_time(&choosen_time, 2);
+                req.time_from_1.hour = choosen_time.hour;
+                req.time_from_1.minute = choosen_time.minute;
+                
+                check_time(&choosen_time, 3);
+                req.time_from_2.hour = choosen_time.hour;
+                req.time_from_2.minute = choosen_time.minute;
                 break;
 
             case JOURNEE :
@@ -117,16 +100,13 @@ int main(int argc, char **argv) {
                 break;
 
             case FIN :
+            
                 printf("Merci et bonne journée !\n");
                 break;
 
             default :
         }
 
-        /*
-        if (write(sock_server, &req, sizeof(req)) == -1)
-            perror("write de la requête");
-        */
         send_request(sock_server, req);
 
         if(choix == HORAIRE || choix == PLAGE  || choix == JOURNEE){
@@ -136,70 +116,23 @@ int main(int argc, char **argv) {
             if (read(sock_server, &nb_train, sizeof(nb_train)) == -1)
                 perror("read nombre de train");
 
-            printf("Nombre de train : %d\n", nb_train);
+            train_number_display(nb_train);
+            
+            if(nb_train > 0){
 
-            Train trains[nb_train];
+                Train trains[nb_train];
 
-            for(int i = 0; i < nb_train; i++){
+                for(int i = 0; i < nb_train; i++){
 
-                /*
-                if (read(sock_server, &train, sizeof(train)) == -1)
-                    perror("read train");
-                */
-               
-                receive_train(sock_server, &trains[i]);
-                display_train(trains[i]);
-                
-            }
-
-            if(choix == HORAIRE && nb_train > 1){
-
-                char rep = ' ';
-
-                printf("%d options sont disponibles, souhaitez-vous le train le plus rapide ? (y/n)\n", nb_train);
-                while(rep != 'y' && rep != 'n'){
-
-                    scanf("%c", &rep);
-
+                    receive_train(sock_server, &trains[i]);
+                    display_train(trains[i]);
                 }
 
-                switch(rep){
+                if(choix == HORAIRE){
 
-                    case 'y' :
-
-                        Time time_cmp={23,59};
-                        Train * fastest;
-
-                        for(int i = 0; i < nb_train; i++){
-
-                            Time duration = time_difference(trains[i].time_from,trains[i].time_to);
-
-                            if(timecmp(duration, time_cmp)==-1){
-                                memcpy(&time_cmp, &duration, sizeof(Time));
-                                fastest=&trains[i];
-                            }
-                        }
-                        display_train(*fastest);
-                        break;
-
-                    case 'n' :
-
-                        double price_min=99999.9999;
-                        Train * cheapest;
-
-                        for(int i =0; i<nb_train;i++){
-
-                            if(trains[i].price < price_min){
-
-                                price_min=trains[i].price;
-                                cheapest=&trains[i];
-                            }
-                        }
-                        display_train(*cheapest);
-                        break;
-
-                    default :
-                }     
+                    char rep = yes_or_no_verification(nb_train);
+                    fastest_or_cheapest_train(nb_train, trains, rep);
+                }
             }
         }
 
