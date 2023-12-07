@@ -31,9 +31,7 @@ void handle_sigint_father() {
         // Si pid valide, envoi d'un signal d'interruption
         if (pid > 0) {
             kill(pid, SIGINT);
-            printf("SIGINT envoyé à %d\n", pid);
         }
-        else printf("0\n");
     }
     exit(0);
 }
@@ -137,14 +135,14 @@ int main(int argc, char **argv) {
                         
                 } while(req.type != FIN);
                 
-                printf("Connexion fermée normalement par le processus %d\n", getpid());
+                printf("Connexion avec %s fermée normalement par le processus %d\n", inet_ntoa(sockaddr.sin_addr), getpid());
                 close(sock_service);
                 exit(0);
 
             default: // père
 
                 close(sock_service);
-                printf("Connexion établie avec %d et gérée par le processus %d\n", sockaddr.sin_addr.s_addr, pid);
+                printf("Connexion établie avec %s et gérée par le processus %d\n", inet_ntoa(sockaddr.sin_addr), pid);
                 int i = 0;
                 // Recherche d'une place libre dans le tableau de mémorisation des fils
                 while (i < nb_child && children[i] < 1) i++;
