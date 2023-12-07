@@ -35,15 +35,3 @@ typedef struct {
 
 void print_train(Train t);
 void print_request(Request r);
-void display_train(Train train);
-int timecmp(Time t1, Time t2);
-void send_train(int socket, Train train);
-void receive_train(int socket,Train *train);
-void send_request(int socket, Request request);
-void receive_request(int socket,Request *request);
-Time time_difference(Time t1,Time t2);
-int read_trains_from_file(char *filename, Train *trains, int maxTrains) ;
-int count_trains(char *filename);
-int filter_train_from_array(Train trains[], int nb_train, Train **trains_filtered, Request req);
-int check_filter(Train train, Request req);
-int soonest_train(Train trains[], Train **filter_result, int nb_train);

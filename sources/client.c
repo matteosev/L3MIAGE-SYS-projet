@@ -10,6 +10,10 @@
 #include <netdb.h>
 
 #include "../headers/commons.h"
+#include "../headers/protocol.h"
+#include "../headers/std_input.h"
+#include "../headers/std_output.h"
+#include "../headers/time.h"
 
 int main(int argc, char **argv) {
 
@@ -23,7 +27,7 @@ int main(int argc, char **argv) {
     //ip_server.s_addr = *host->h_addr_list[0];
 
     // Connexion distante
-    ip_server.s_addr = inet_addr("152.77.82.87");
+    ip_server.s_addr = inet_addr("152.77.82.85");
 
     addr_server.sin_family = AF_INET;
     addr_server.sin_port = PORT;

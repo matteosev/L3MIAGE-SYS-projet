@@ -10,8 +10,10 @@
 #include <sys/wait.h>
 
 #include "../headers/commons.h"
-
-
+#include "../headers/filter.h"
+#include "../headers/parsing.h"
+#include "../headers/protocol.h"
+#include "../headers/time.h"
 
 void end_child() {
     wait(NULL);
