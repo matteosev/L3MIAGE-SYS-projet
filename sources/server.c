@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
                 do{
                     
                     receive_request(sock_service, &req);
-
+                    print_request(req);
                     int nb_train_filtered = filter_train_from_array(trains, nb_train, &filtered_trains, req);
 
                     if (write(sock_service, &nb_train_filtered, sizeof(nb_train_filtered)) == -1)

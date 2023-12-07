@@ -58,10 +58,14 @@ void receive_train(int socket, Train *train) {
 void send_request(int socket, Request query) {
 
     int type = (int)query.type;
+    int city_from_length = strlen(query.city_from) ;
+    int city_to_length = strlen(query.city_to) ;
     if(
         write(socket, &type, sizeof(type))  == -1 ||
-        write(socket, &query.city_from, sizeof(query.city_from))  == -1 ||
-        write(socket, &query.city_to, sizeof(query.city_to))  == -1 ||
+        write(socket, &city_from_length, sizeof(city_from_length)) == 1 ||
+        write(socket, &query.city_from, sizeof(char) * city_from_length)  == -1 ||
+        write(socket, &city_to_length, sizeof(city_to_length)) == 1 ||
+        write(socket, &query.city_to, sizeof(char) * city_to_length)  == -1 ||
         write(socket, &query.time_from_1.minute, sizeof(int))  == -1 ||
         write(socket, &query.time_from_1.hour, sizeof(int))  == -1 ||
         write(socket, &query.time_from_2.minute, sizeof(int))  == -1 ||
@@ -72,10 +76,14 @@ void send_request(int socket, Request query) {
 
 void receive_request(int socket, Request *query) {
 
+    int city_from_length, city_to_length;
+
     if(
         read(socket, &query->type, sizeof(query->type)) <= 0 ||
-        read(socket, &query->city_from, sizeof(query->city_from)) <= 0 ||
-        read(socket, &query->city_to, sizeof(query->city_to)) <= 0 ||
+        read(socket, &city_from_length, sizeof(int)) <= 0 ||
+        read(socket, &query->city_from, sizeof(char) * city_from_length) <= 0 ||
+        read(socket, &city_to_length, sizeof(int)) <= 0 ||
+        read(socket, &query->city_to, sizeof(char) * city_to_length) <= 0 ||
         read(socket, &query->time_from_1.minute, sizeof(int)) <= 0 ||
         read(socket, &query->time_from_1.hour, sizeof(int)) <= 0 ||
         read(socket, &query->time_from_2.minute, sizeof(int)) <= 0 ||
