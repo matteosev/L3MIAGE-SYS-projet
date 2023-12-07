@@ -54,6 +54,8 @@ void send_train(int socket, Train train) {
 
 void receive_train(int socket, Train *train) {
     int city_from_length, city_to_length;
+    memset(&train->city_from, 0, sizeof(train->city_from));
+    memset(&train->city_to, 0, sizeof(train->city_to));
     // Lit les données du train depuis le socket
     // En cas d'erreur, affiche un message d'erreur et retourne
     if (
