@@ -115,3 +115,10 @@ int choices_display() {
 
     return -1;
 }
+
+void display_cities(char cities[250][100], int nb_city){
+
+    for(int i = 0; i < nb_city; i++){
+        printf("%d. %s\n", i+1, cities[i]);
+    }
+}
