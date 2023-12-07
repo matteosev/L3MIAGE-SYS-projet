@@ -45,9 +45,11 @@ int main(int argc, char **argv) {
     bind(sock_listen, (const struct sockaddr *)&sockaddr, size_addr);
     listen(sock_listen, 0);
 
-    char *csv = "db.csv";
-    const int nb_train = count_trains(csv);
+    // Lecture du fichier csv "base de données"
+    // argv[1] : nom du fichier cdv, 1e paramètre de la ligne de commande
+    const int nb_train = count_trains(argv[1]);
     Train trains[nb_train];
+    read_trains_from_file(argv[1], trains, nb_train);
     
     char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH];
     int city_count = 0;
