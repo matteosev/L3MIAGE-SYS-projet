@@ -24,13 +24,16 @@ int nb_child;
  * Envoie un signal d'interruption (SIGINT) à chacun des processus fils encore en vie
  */
 void handle_sigint_father() {
-    printf("\nSIGINT reçu (père)\n");
+    printf("\nSIGINT reçu par père\n%d fils encore en vie\n", nb_child);
+    // Parcours des pid des fils mémorisés
     for (int i = 0; i < nb_child; i++) {
         int pid = children[i];
-        if (pid > -1) {
+        // Si pid valide, envoi d'un signal d'interruption
+        if (pid > 0) {
             kill(pid, SIGINT);
             printf("SIGINT envoyé à %d\n", pid);
         }
+        else printf("0\n");
     }
     exit(0);
 }
@@ -47,12 +50,14 @@ void handle_sigint_child() {
 void handle_sigchld() {
     // pid de l'enfant mort
     int pid = wait(NULL);
+    printf("Processus %d est mort\n", pid);
     // Recherche du pid dans les enfants mémorisés
     int i = 0;
     while(i < nb_child && children[i] != pid)
         i++;
     // Oubli du pid
-    children[i] = -1;
+    children[i] = 0;
+    nb_child--;
 }
 
 int main(int argc, char **argv) {
@@ -140,7 +145,11 @@ int main(int argc, char **argv) {
 
                 close(sock_service);
                 printf("Connexion établie avec %d et gérée par le processus %d\n", sockaddr.sin_addr.s_addr, pid);
-                children[nb_child] = pid;
+                int i = 0;
+                // Recherche d'une place libre dans le tableau de mémorisation des fils
+                while (i < nb_child && children[i] < 1) i++;
+                // Mémorisation du fils
+                children[i] = pid;
                 nb_child++;
                 break;
         }
