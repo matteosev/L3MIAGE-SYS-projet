@@ -15,7 +15,18 @@
 #include "../headers/std_output.h"
 #include "../headers/time.h"
 
+/**
+ * Se connecte au serveur et dialogue avec l'utilisateur
+ * @param argv[1] Adresse IPv4 du serveur auquel le client doit se connecter
+ * @param argv[2] Numéro de port écouté par le serveur
+ * @return 0 normalement, 1 en cas d'erreur
+*/
 int main(int argc, char **argv) {
+
+    if (argc != 3) {
+        printf("Le client a besoin de l'adresse IPv4 du serveur et d'un numéro de port\n");
+        exit(1);
+    }
 
     struct in_addr ip_server;
     struct sockaddr_in addr_server;
@@ -24,15 +35,14 @@ int main(int argc, char **argv) {
     char cities[250][100];
     int city_count = 0;
 
-    // Connexion locale
+    // Connexion par IPv4 (pc de la salle 215 = 152.77.82.8x)
+    ip_server.s_addr = inet_addr(argv[1]);
+    // Connexion par nom de domaine
     //struct hostent *host = gethostbyname("localhost");
     //ip_server.s_addr = *host->h_addr_list[0];
 
-    // Connexion distante (pc de la salle 215 = 152.77.82.8x)
-    ip_server.s_addr = inet_addr(argv[1]);
-
     addr_server.sin_family = AF_INET;
-    addr_server.sin_port = PORT;
+    addr_server.sin_port = atoi(argv[2]);
     addr_server.sin_addr = ip_server;
 
     sock_server = socket(AF_INET, SOCK_STREAM, 0);
