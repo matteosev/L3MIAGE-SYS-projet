@@ -48,6 +48,18 @@ int main(int argc, char **argv) {
         perror("connexion");
         exit(1);
     }
+    if (read(sock_server, &city_count, sizeof(city_count)) == -1) {
+                perror("read city count");
+                exit(1);
+            }
+
+            for (int i = 0; i < city_count; i++) {
+                if (read(sock_server, cities[i], sizeof(cities[i])) == -1) {
+                    perror("Error reading city data");
+                    exit(1);
+                }
+            }
+
 
     do{
 
@@ -65,17 +77,13 @@ int main(int argc, char **argv) {
 
         if(choix == HORAIRE || choix == PLAGE  || choix == JOURNEE){
 
-            if (read(sock_server, &city_count, sizeof(city_count)) == -1) {
-                perror("read city count");
-                exit(1);
+            
+            // Print the cities
+            printf("Villes disponibles:\n");
+            for (int i = 0; i < city_count; i++) {
+                printf("%d. %s\n", i + 1, cities[i]);
             }
 
-            for (int i = 0; i < city_count; i++) {
-                if (read(sock_server, cities[i], sizeof(cities[i])) == -1) {
-                    perror("Error reading city data");
-                    exit(1);
-                }
-            }
             printf("Ville de départ : ");
             scanf("%99s", req.city_from);
             printf("Ville d'arrivée : ");
