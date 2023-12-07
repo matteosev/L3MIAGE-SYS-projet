@@ -21,6 +21,8 @@ int main(int argc, char **argv) {
     struct sockaddr_in addr_server;
     int sock_server;
     Request req;
+    char cities[250][100];
+    int city_count = 0;
 
     // Connexion locale
     //struct hostent *host = gethostbyname("localhost");
@@ -63,7 +65,17 @@ int main(int argc, char **argv) {
 
         if(choix == HORAIRE || choix == PLAGE  || choix == JOURNEE){
 
-            printf("Villes disponibles : Paris, Montelimar, Grenoble, Valence \n");
+            if (read(sock_server, &city_count, sizeof(city_count)) == -1) {
+                perror("read city count");
+                exit(1);
+            }
+
+            for (int i = 0; i < city_count; i++) {
+                if (read(sock_server, cities[i], sizeof(cities[i])) == -1) {
+                    perror("Error reading city data");
+                    exit(1);
+                }
+            }
             printf("Ville de départ : ");
             scanf("%99s", req.city_from);
             printf("Ville d'arrivée : ");
