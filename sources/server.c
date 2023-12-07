@@ -48,7 +48,11 @@ int main(int argc, char **argv) {
     char *csv = "db.csv";
     const int nb_train = count_trains(csv);
     Train trains[nb_train];
-    read_trains_from_file(csv, trains, nb_train);
+    
+    char cities[MAX_CITIES][MAX_CITY_NAME_LENGTH];
+    int city_count = 0;
+
+    read_trains_from_file(csv, trains, nb_train, cities, &city_count);
     
     while(1) {
 
@@ -68,6 +72,18 @@ int main(int argc, char **argv) {
 
                 close(sock_listen);
                 Request req;
+                if (write(sock_service, &city_count, sizeof(city_count)) == -1) {
+                    perror("write city count");
+                    exit(1);
+                }
+
+                
+                for (int i = 0; i < city_count; i++) {
+                    if (write(sock_service, cities[i], sizeof(cities[i])) == -1) {
+                        perror("write city data");
+                        exit(1);
+                    }
+                }
 
                 do{
                     
