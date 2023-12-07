@@ -5,6 +5,7 @@
 #include "../headers/commons.h"
 #include "../headers/std_input.h"
 
+/*Permet de s'assurer que l'utilisateur ne puisse rien saisir d'autre que 'y' ou 'n'*/
 char yes_or_no_verification(int nb_train) {
 
     char rep;
@@ -25,6 +26,11 @@ char yes_or_no_verification(int nb_train) {
     return rep;
 }
 
+/*Permet de s'assurer :
+- de la présence d'une chaine de caractères uniquement
+- si oui, mise au format Ville peut importe l'entrée
+- enfin de s'assurer de la présence de la ville dans la liste des villes disponibles
+*/
 int cities_check(char *input_city, char cities[][100]){
 
     if (only_letters(input_city) == 0) {
@@ -41,6 +47,7 @@ int cities_check(char *input_city, char cities[][100]){
     return 1;
 }
 
+/*Permet de garantir l'absence de chiffres ou de caractères spéciaux*/
 int only_letters(char* input_city){
 
     // Vérifier que la saisie ne contient que des lettres
@@ -55,8 +62,9 @@ int only_letters(char* input_city){
     return valid_input;
 }
 
+/*Permet de formatter une entrée au format Ville, afin de sécuriser la recherche côté serveur
+et de faciliter la vie de l'utilisateur pour qu'il puisse taper le nom de la ville comme il veut*/
 void to_correct_format(char* input_city){
-
 
     // Formater la ville saisie (première lettre en majuscule, le reste en minuscules)
     for (int i = 0; input_city[i] != '\0'; ++i) {
@@ -65,6 +73,7 @@ void to_correct_format(char* input_city){
     input_city[0] = toupper(input_city[0]);
 }
 
+/*Permet de vérifier la présence d'une ville dans la liste de villes disponibles*/
 int in_array(char input_city[100], char cities[][100]){
 
     for (int i = 0; cities[i][0] != '\0'; ++i) {
@@ -75,6 +84,9 @@ int in_array(char input_city[100], char cities[][100]){
     return 0;
 }
 
+/*Permet de s'assurer d'avoir un nouveau Time qui sera au format HH:MM
+Permet également d'afficher un message suivant le numéro saisi en paramètre, 
+utilise pour factorirer le main client*/
 void check_time(Time* time, int numeroMessage){ 
 
     int retour;
@@ -120,6 +132,7 @@ void check_time(Time* time, int numeroMessage){
     } while (validation != 1);
 }
 
+/*Permet de mettre dans input_city une ville qui sera forcément dans les villes disponibles*/
 void city_check(char *input_city, char cities[][100], int numeroMessage) {
 
     int retour = -2;
@@ -152,6 +165,7 @@ void city_check(char *input_city, char cities[][100], int numeroMessage) {
     strcpy(input_city, input_buffer);
 }
 
+/*Permet d'avoir une heure valide avec 0 < H < 23 && 0 < M < 59*/
 int valid_time(int hour, int minute) {
 
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
