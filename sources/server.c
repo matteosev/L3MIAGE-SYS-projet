@@ -15,26 +15,54 @@
 #include "../headers/protocol.h"
 #include "../headers/time.h"
 
-void end_child() {
-    wait(NULL);
+// 100 connexions simultanées maximum
+int children[100];
+int nb_child;
+
+/**
+ * Gère l'interruption du processus père (serveur)
+ * Envoie un signal d'interruption (SIGINT) à chacun des processus fils encore en vie
+ */
+void handle_sigint_father() {
+    printf("\nSIGINT reçu (père)\n");
+    for (int i = 0; i < nb_child; i++) {
+        int pid = children[i];
+        if (pid > -1) {
+            kill(pid, SIGINT);
+            printf("SIGINT envoyé à %d\n", pid);
+        }
+    }
+    exit(0);
 }
 
-void handle_sigsegv() {
-    printf("Erreur de segmentation\n");
-    exit(1);
+/**
+ * Gère l'interruption d'un processus fils
+ * Informe l'administrateur de sa mort
+ */
+void handle_sigint_child() {
+    printf("SIGINT reçu par %d\n", getpid());
+    exit(0);
+}
+
+void handle_sigchld() {
+    // pid de l'enfant mort
+    int pid = wait(NULL);
+    // Recherche du pid dans les enfants mémorisés
+    int i = 0;
+    while(i < nb_child && children[i] != pid)
+        i++;
+    // Oubli du pid
+    children[i] = -1;
 }
 
 int main(int argc, char **argv) {
     
     int sock_listen;
     struct sockaddr_in sockaddr;
-    struct sigaction ac;
     char *db_filename = argv[1];
 
-    ac.sa_handler = end_child;
-    ac.sa_flags = SA_RESTART;
-    sigaction(SIGCHLD, &ac, NULL);
-    signal(SIGSEGV, handle_sigsegv);
+    signal(SIGINT, handle_sigint_father);
+    signal(SIGCHLD, handle_sigchld);
     
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = PORT;
@@ -47,7 +75,7 @@ int main(int argc, char **argv) {
     listen(sock_listen, 0);
 
     // Lecture du fichier csv "base de données"
-    // argv[1] : nom du fichier cdv, 1e paramètre de la ligne de commande
+    // argv[1] : nom du fichier csv, 1e paramètre de la ligne de commande
     const int nb_train = count_trains(db_filename);
     Train trains[nb_train];
     
@@ -55,6 +83,8 @@ int main(int argc, char **argv) {
     int city_count = 0;
 
     read_trains_from_file(db_filename, trains, nb_train, cities, &city_count);
+
+    nb_child = 0;
     
     while(1) {
 
@@ -71,7 +101,8 @@ int main(int argc, char **argv) {
                 break;
 
             case 0: // fils
-
+                // Définition du comportement en cas de SIGINT reçu (envoyé par le père)
+                signal(SIGINT, handle_sigint_child);
                 close(sock_listen);
                 Request req;
                 if (write(sock_service, &city_count, sizeof(city_count)) == -1) {
@@ -109,6 +140,8 @@ int main(int argc, char **argv) {
 
                 close(sock_service);
                 printf("Connexion établie avec %d et gérée par le processus %d\n", sockaddr.sin_addr.s_addr, pid);
+                children[nb_child] = pid;
+                nb_child++;
                 break;
         }
     }
