@@ -96,8 +96,8 @@ int main(int argc, char **argv) {
                     if (write(sock_service, &nb_train_filtered, sizeof(nb_train_filtered)) == -1)
                         perror("write du nombre de train");
                     
-                    for(int i = 0; i < nb_train_filtered; i++)
-                        send_train(sock_service, filtered_trains[i]);
+                    for(int i = 0; i < nb_train_filtered; i++){
+                        send_train(sock_service, filtered_trains[i]);}
                         
                 } while(req.type != FIN);
                 
