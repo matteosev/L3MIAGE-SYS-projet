@@ -25,11 +25,11 @@ int main(int argc, char **argv) {
     int city_count = 0;
 
     // Connexion locale
-    //struct hostent *host = gethostbyname("localhost");
-    //ip_server.s_addr = *host->h_addr_list[0];
+    struct hostent *host = gethostbyname("localhost");
+    ip_server.s_addr = *host->h_addr_list[0];
 
     // Connexion distante (pc de la salle 215 = 152.77.82.8x)
-    ip_server.s_addr = inet_addr(argv[1]);
+    //ip_server.s_addr = inet_addr(argv[1]);
 
     addr_server.sin_family = AF_INET;
     addr_server.sin_port = PORT;
