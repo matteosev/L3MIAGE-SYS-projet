@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
                     display_train(trains[i]);
                 }
 
-                if(choix == HORAIRE){
+                if(choix == HORAIRE && nb_train > 1){
 
                     char rep = yes_or_no_verification(nb_train);
                     fastest_or_cheapest_train(nb_train, trains, rep);
